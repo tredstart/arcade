@@ -21,6 +21,22 @@ func FetchRetro(id uuid.UUID) (Retro, error) {
 	return retro, nil
 }
 
+func FetchLatestRetro(user_id uuid.UUID) (Retro, error) {
+	var retro Retro
+	if err := database.DB.Get(&retro, `SELECT * FROM retro WHERE user = ? ORDER_BY created DES LIMIT 1`, user_id); err != nil {
+		return Retro{}, err
+	}
+	return retro, nil
+}
+
+func FetchRetrosByUser(user_id uuid.UUID) ([]Retro, error) {
+	var retros []Retro
+	if err := database.DB.Select(&retros, `SELECT * FROM retro WHERE user = ?`, user_id); err != nil {
+		return []Retro{}, err
+	}
+	return retros, nil
+}
+
 func FetchRetros() ([]Retro, error) {
 	var retros []Retro
 	if err := database.DB.Select(&retros, `SELECT * FROM retro`); err != nil {

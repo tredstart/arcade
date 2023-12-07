@@ -20,6 +20,14 @@ func FetchUser(id uuid.UUID) (User, error) {
 	return user, nil
 }
 
+func FetchUserByUsername(username string) (User, error) {
+    var user User
+	if err := database.DB.Get(&user, `SELECT * FROM user WHERE username = ?`, username); err != nil {
+		return User{}, err
+	}
+	return user, nil
+}
+
 func FetchUsers() ([]User, error) {
 	var users []User
 	if err := database.DB.Select(&users, `SELECT * FROM user`); err != nil {
