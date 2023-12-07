@@ -15,8 +15,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/", s.helloWorldHandler)
     // and this should be account thin idk
     // also how do I do "save to the local storage and shit?"
-    // e.GET("/login")
+    // e.GET("/login") -> also this can show form for guest(although I'm not sure about this)
+    // e.POST("/login")
     // e.GET("/signup")
+    // e.POST("/signup")
     // e.GET("/home") -> should probably show the latest retro
     // e.GET("/history")
 
