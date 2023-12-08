@@ -2,14 +2,11 @@ package views
 
 import "arcade/internal/models"
 
-templ HomePage(retro *models.Retro) {
+templ HomePage() {
 	@head("Home")
 	<body>
-		if retro != nil {
-			<p>
-				{ retro.Created }
-			</p>
-		}
+		<a href="/history">History</a>
+        <a href="/retro/templates">New retro</a>
 	</body>
 }
 

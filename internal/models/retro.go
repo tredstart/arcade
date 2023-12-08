@@ -23,7 +23,7 @@ func FetchRetro(id uuid.UUID) (Retro, error) {
 
 func FetchLatestRetro(user_id uuid.UUID) (Retro, error) {
 	var retro Retro
-	if err := database.DB.Get(&retro, `SELECT * FROM retro WHERE user = ? ORDER_BY created DES LIMIT 1`, user_id); err != nil {
+	if err := database.DB.Get(&retro, `SELECT * FROM retro WHERE user = ? ORDER BY created DESC LIMIT 1`, user_id); err != nil {
 		return Retro{}, err
 	}
 	return retro, nil

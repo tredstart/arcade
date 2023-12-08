@@ -1,6 +1,7 @@
 package server
 
 import (
+	"arcade/internal/server/routes"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -15,12 +16,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/", s.helloWorldHandler)
     // and this should be account thin idk
     // also how do I do "save to the local storage and shit?"
-    // e.GET("/login") -> also this can show form for guest(although I'm not sure about this)
-    // e.POST("/login")
-    // e.GET("/signup")
-    // e.POST("/signup")
-    // e.GET("/home") -> should probably show the latest retro
-    // e.GET("/history")
+    e.GET("/login", routes.LoginForm) // -> also this can show form for guest(although I'm not sure about this)
+    e.POST("/login", routes.Login)
+    e.GET("/signup", routes.RegisterForm)
+    e.POST("/signup", routes.Register)
+    e.GET("/home", routes.Home) // -> should probably show the latest retro
+    e.GET("/history", routes.History)
 
     // basically the whole retro logic that i can group into retro package
     // e.GET("/retro/:url") -> should verify if user is in local storage or some shit

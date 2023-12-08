@@ -17,7 +17,6 @@ create table if not exists retro(
     user text not null,
     created text not null,
     template text not null,
-    url text unique not null,
     foreign key(user) references user(id),
     foreign key(template) references template(id)
 );

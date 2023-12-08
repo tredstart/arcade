@@ -24,6 +24,7 @@ migrate:
 # Clean the binary
 clean:
 	@echo "Cleaning..."
+	@sqlite3 prod.db < migrations/drop.sql
 	@rm -f main
 
 .PHONY: all build run test clean

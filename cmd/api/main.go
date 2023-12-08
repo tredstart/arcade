@@ -4,6 +4,8 @@ import (
 	"arcade/internal/server"
     "arcade/internal/database"
     "github.com/jmoiron/sqlx"
+    
+    _ "github.com/mattn/go-sqlite3"
 )
 
 func main() {

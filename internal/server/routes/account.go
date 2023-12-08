@@ -3,6 +3,8 @@ package routes
 import (
 	"arcade/internal/models"
 	"arcade/internal/utils"
+	"arcade/internal/views"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -12,27 +14,18 @@ import (
 func Home(c echo.Context) error {
     // should render a home page
     // also it is only accessible to logged in users
-    username, err := utils.ReadCookie(c, "username")
+    _, err := utils.ReadCookie(c, "username")
     if err != nil {
         // probably redirect to login or smth
         return err
     }
-    user, err := models.FetchUserByUsername(username.Value)
-    if err != nil {
-        return err
-    }
 
-    _, err = models.FetchLatestRetro(user.Id)
-    if err != nil {
-        return err
-    }
-
-    return nil
+    return views.HomePage().Render(c.Request().Context(), c.Response().Writer)
 }
 
 func LoginForm(c echo.Context) error {
     // should handle Login form 
-    return nil
+    return views.Login().Render(c.Request().Context(), c.Response().Writer)
 }
 
 func Login(c echo.Context) error {
@@ -55,7 +48,7 @@ func Login(c echo.Context) error {
 
 func RegisterForm(c echo.Context) error {
     // should render RegisterForm
-    return nil
+    return views.Register().Render(c.Request().Context(), c.Response().Writer)
 }
 
 func Register(c echo.Context) error {
@@ -85,7 +78,7 @@ func Register(c echo.Context) error {
 
 func LoginAsGuestForm(c echo.Context) error {
     // when you just need to access as guest
-    return nil
+    return views.LoginAsGuest().Render(c.Request().Context(), c.Response().Writer)
 }
 
 func LoginAsGuest(c echo.Context) error {
@@ -104,13 +97,14 @@ func History(c echo.Context) error {
     }
     user, err := models.FetchUserByUsername(username.Value)
     if err != nil {
+        fmt.Println("damn")
         return err
     }
 
-    _, err = models.FetchRetrosByUser(user.Id)
+    retros, err := models.FetchRetrosByUser(user.Id)
     if err != nil {
-        return err
+        retros = []models.Retro{}
     }
 
-    return nil
+    return views.HistoryPage(retros).Render(c.Request().Context(), c.Response().Writer)
 }
