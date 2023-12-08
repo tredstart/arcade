@@ -12,6 +12,18 @@ import "bytes"
 
 import "arcade/internal/models"
 
+func addInput() templ.ComponentScript {
+	return templ.ComponentScript{
+		Name: `__templ_addInput_d199`,
+		Function: `function __templ_addInput_d199(){var container = document.getElementById('inputsContainer');
+    var input = document.createElement('input');
+    input.name = 'categories';
+    container.appendChild(input);}`,
+		Call:       templ.SafeScript(`__templ_addInput_d199`),
+		CallInline: templ.SafeScriptInline(`__templ_addInput_d199`),
+	}
+}
+
 func Templates(templates []models.Template) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -85,7 +97,33 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form method=\"post\"><input name=\"categories\" type=\"text\"> <input name=\"categories\" type=\"text\"> <input name=\"categories\" type=\"text\"> <input name=\"categories\" type=\"text\"> <input type=\"submit\" value=\"Create\"></form></body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form method=\"post\"><div id=\"inputsContainer\"><label for=\"categories\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var5 := `Categories`
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</label> <input name=\"categories\" type=\"text\"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, addInput())
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input type=\"button\" onclick=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var6 templ.ComponentScript = addInput()
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6.Call)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" value=\"Add Category\"> <input type=\"submit\" value=\"Create\"></form></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

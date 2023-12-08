@@ -2,6 +2,13 @@ package views
 
 import "arcade/internal/models"
 
+script addInput() {
+    var container = document.getElementById('inputsContainer');
+    var input = document.createElement('input');
+    input.name = 'categories';
+    container.appendChild(input);
+}
+
 templ Templates(templates []models.Template) {
 	@head("Templates")
 	<body>
@@ -16,10 +23,13 @@ templ CreateTemplateForm() {
 	@head("New template")
 	<body>
 		<form method="post">
-			<input name="categories" type="text"/>
-			<input name="categories" type="text"/>
-			<input name="categories" type="text"/>
-			<input name="categories" type="text"/>
+			<div id="inputsContainer">
+				<label for="categories">
+					Categories
+				</label>
+				<input name="categories" type="text"/>
+			</div>
+			<input type="button" onclick={ addInput() } value="Add Category"/>
 			<input type="submit" value="Create"/>
 		</form>
 	</body>
