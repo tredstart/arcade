@@ -1,0 +1,21 @@
+package views
+
+import "arcade/internal/models"
+
+templ HomePage(retro *models.Retro) {
+	@head("Home")
+	<body>
+		if retro != nil {
+			<p>
+				{ retro.Created }
+			</p>
+		}
+	</body>
+}
+
+templ HistoryPage(retros []models.Retro) {
+	@head("History")
+	for _, retro := range retros {
+		<a href={ templ.URL("/retro/" + retro.Id.String()) }>{ retro.Created }</a>
+	}
+}
