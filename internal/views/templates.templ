@@ -1,0 +1,26 @@
+package views
+
+import "arcade/internal/models"
+
+templ Templates(templates []models.Template) {
+	@head("Templates")
+	<body>
+		<a href="/retro/templates/new">New template</a>
+		for _, template := range templates {
+			<p>{ template.Categories }</p>
+		}
+	</body>
+}
+
+templ CreateTemplateForm() {
+	@head("New template")
+	<body>
+		<form method="post">
+			<input name="categories" type="text"/>
+			<input name="categories" type="text"/>
+			<input name="categories" type="text"/>
+			<input name="categories" type="text"/>
+			<input type="submit" value="Create"/>
+		</form>
+	</body>
+}

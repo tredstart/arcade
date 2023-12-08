@@ -24,7 +24,7 @@ func WriteCookie(c echo.Context, name, value string) {
 }
 
 func ReadCookie(c echo.Context, name string) (*http.Cookie, error){
-    cookie, err := c.Cookie("username")
+    cookie, err := c.Cookie(name)
     if err != nil {
         return nil, err
     }

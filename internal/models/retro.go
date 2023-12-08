@@ -29,7 +29,7 @@ func FetchLatestRetro(user_id uuid.UUID) (Retro, error) {
 	return retro, nil
 }
 
-func FetchRetrosByUser(user_id uuid.UUID) ([]Retro, error) {
+func FetchRetrosByUser(user_id string) ([]Retro, error) {
 	var retros []Retro
 	if err := database.DB.Select(&retros, `SELECT * FROM retro WHERE user = ?`, user_id); err != nil {
 		return []Retro{}, err

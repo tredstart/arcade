@@ -28,9 +28,9 @@ func (s *Server) RegisterRoutes() http.Handler {
     // e.POST("/retro/:url") -> does a post to create an item in retro box
     // e.GET("/retro/new")
     // e.POST("/retro/new")
-    // e.GET("/retro/templates")
-    // e.GET("/retro/templates/new")
-    // e.POST("/retro/templates/new")
+    e.GET("/retro/templates", routes.Templates)
+    e.GET("/retro/templates/new", routes.TemplatesNew)
+    e.POST("/retro/templates/new", routes.TempalatesCreate)
 
 	return e
 }
