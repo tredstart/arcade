@@ -4,18 +4,16 @@ import (
 	"arcade/internal/models"
 	"arcade/internal/utils"
 	"arcade/internal/views"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 func Home(c echo.Context) error {
-	// should render a home page
-	// also it is only accessible to logged in users
 	_, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		// probably redirect to login or smth
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 
 	return views.HomePage().Render(c.Request().Context(), c.Response().Writer)
@@ -31,22 +29,18 @@ func Login(c echo.Context) error {
 		return views.ErrorBlock("Username cannot be less than 4 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 
-	// TODO: there should be hashing
 	p := c.Request().FormValue("password")
 	user, err := models.FetchUserByUsername(username)
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
-	if p, err = utils.HashPassword(p); err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
-	}
-	if p != user.Password {
+	if !utils.CheckPasswordHash(p, user.Password) {
 		err = &utils.CustomError{S: "Wrong password"}
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
-	return nil
+	return c.Redirect(http.StatusSeeOther, "/home")
 }
 
 func RegisterForm(c echo.Context) error {
@@ -74,8 +68,7 @@ func Register(c echo.Context) error {
 		return views.ErrorBlock("Username cannot be less than 4 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 	user.Username = c.Request().FormValue("username")
-	// TODO: this should also be hashed
-	p, err := utils.HashPassword(password)
+    p, err := utils.HashPassword(password)
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
@@ -83,14 +76,9 @@ func Register(c echo.Context) error {
 	if err := models.CreateUser(&user); err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
-	// TODO: figure out how to do redirect
-	//else {
-	// 	id := "/profile/" + user.ID.String()
-	// 	http.Redirect(w, r, id, http.StatusMovedPermanently)
-	// }
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
-	return nil
+	return c.Redirect(http.StatusSeeOther, "/home")
 }
 
 func LoginAsGuestForm(c echo.Context) error {
@@ -103,15 +91,13 @@ func LoginAsGuest(c echo.Context) error {
 		return views.ErrorBlock("Name cannot be empty").Render(c.Request().Context(), c.Response().Writer)
 	}
 	utils.WriteCookie(c, "name", name)
-	// Redirect to home?
-	return nil
+	return c.Redirect(http.StatusSeeOther, "/home")
 }
 
 func History(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		// probably redirect to login or smth
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return c.Redirect(http.StatusSeeOther, "/home")
 	}
 	retros, _ := models.FetchRetrosByUser(user.Value)
 	return views.HistoryPage(retros).Render(c.Request().Context(), c.Response().Writer)

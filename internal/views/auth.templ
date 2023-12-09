@@ -3,7 +3,7 @@ package views
 templ Login() {
 	@head("Login")
 	<body>
-		<form method="post">
+		<form hx-post="/login" hx-swap="beforebegin">
 			<input type="text" name="username"/>
 			<input type="password" name="password"/>
 			<input type="submit" value="Login"/>
@@ -14,7 +14,7 @@ templ Login() {
 templ Register() {
 	@head("Register")
 	<body>
-		<form method="post">
+		<form hx-post="/register" hx-swap="beforebegin">
 			<input type="text" name="username"/>
 			<input type="text" name="name"/>
 			<input type="password" name="password"/>

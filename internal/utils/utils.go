@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -33,10 +34,12 @@ func ReadCookie(c echo.Context, name string) (*http.Cookie, error){
 }
 
 func HashPassword(password string) (string, error) {
-	// Generate a hashed version of the password
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return "", err
-	}
-	return string(hash), nil
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 6)
+    return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    log.Println(err)
+    return err == nil
 }
