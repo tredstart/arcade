@@ -2,20 +2,25 @@ package views
 
 import "arcade/internal/models"
 
-templ RetroPage(records map[string][]models.Record) {
+templ RetroItem(content, author string) {
+	<div>
+		<p>{ content }</p>
+		<p>{ author }</p>
+	</div>
+}
+
+templ RetroPage(records map[string][]models.Record, c_ids map[string]string) {
+	@head("Retro time")
 	for category := range records {
-		<div>
-			<form method="post">
-					<p>{ category }</p>
+		<div id={ c_ids[category] }>
+			<form hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
+				<p>{ category }</p>
 				<input type="hidden" name="category" value={ category }/>
 				<input type="text" name="content"/>
 				<input type="submit" value="Post"/>
 			</form>
 			for _, record := range records[category] {
-				<div>
-					<p>{ record.Content }</p>
-					<p>{ record.Author }</p>
-				</div>
+				@RetroItem(record.Content, record.Author)
 			}
 		</div>
 	}

@@ -6,6 +6,7 @@ import (
 	"arcade/internal/views"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -30,10 +31,14 @@ func RetroPage(c echo.Context) error {
 	records, _ := models.FetchRecordsByRetro(retro_id)
 	categories := strings.Split(template.Categories, ", ")
 	context := make(map[string][]models.Record)
+    c_ids := make(map[string]string)
 
 	user, _ := utils.ReadCookie(c, "user")
 	for _, category := range categories {
 		context[category] = []models.Record{}
+
+        regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
+        c_ids[category] = regex.ReplaceAllString(category, "_")
 		if user != nil {
 			for _, record := range records {
 				if record.Category == category {
@@ -42,7 +47,7 @@ func RetroPage(c echo.Context) error {
 			}
 		}
 	}
-	return views.RetroPage(context).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroPage(context, c_ids).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroItemCreate(c echo.Context) error {
@@ -65,7 +70,7 @@ func RetroItemCreate(c echo.Context) error {
 		log.Println("Error while creating new record: ", err)
 		return c.String(http.StatusTeapot, "Couldn't create new record")
     }
-	return c.String(http.StatusCreated, "Record created successfuly")
+	return views.RetroItem(record.Content, record.Author).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroCreate(c echo.Context) error {
