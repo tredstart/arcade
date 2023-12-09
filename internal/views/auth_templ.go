@@ -27,7 +27,7 @@ func Login() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form hx-post=\"/login\" hx-swap=\"beforebegin\"><input type=\"text\" name=\"username\"> <input type=\"password\" name=\"password\"> <input type=\"submit\" value=\"Login\"></form></body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form method=\"post\"><input type=\"text\" name=\"username\"> <input type=\"password\" name=\"password\"> <input type=\"submit\" value=\"Login\"></form></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -55,7 +55,7 @@ func Register() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form hx-post=\"/register\" hx-swap=\"beforebegin\"><input type=\"text\" name=\"username\"> <input type=\"text\" name=\"name\"> <input type=\"password\" name=\"password\"> <input type=\"password\" name=\"confirm\"> <input type=\"submit\" value=\"Sign up\"></form></body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form method=\"post\"><input type=\"text\" name=\"username\"> <input type=\"text\" name=\"name\"> <input type=\"password\" name=\"password\"> <input type=\"password\" name=\"confirm\"> <input type=\"submit\" value=\"Sign up\"></form></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -22,6 +22,7 @@ func WriteCookie(c echo.Context, name, value string) {
     cookie.Name = name
     cookie.Value = value
     cookie.Expires = time.Now().Add(24 * time.Hour)
+    cookie.SameSite = http.SameSiteStrictMode
     c.SetCookie(cookie)
 }
 
@@ -40,6 +41,5 @@ func HashPassword(password string) (string, error) {
 
 func CheckPasswordHash(password, hash string) bool {
     err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-    log.Println(err)
     return err == nil
 }

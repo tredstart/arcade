@@ -10,15 +10,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Home(c echo.Context) error {
-	_, err := utils.ReadCookie(c, "user")
-	if err != nil {
-		return c.Redirect(http.StatusSeeOther, "/login")
-	}
-
-	return views.HomePage().Render(c.Request().Context(), c.Response().Writer)
-}
-
 func LoginForm(c echo.Context) error {
 	return views.Login().Render(c.Request().Context(), c.Response().Writer)
 }
@@ -40,7 +31,7 @@ func Login(c echo.Context) error {
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
-	return c.Redirect(http.StatusSeeOther, "/home")
+	return c.Redirect(http.StatusSeeOther, "/templates")
 }
 
 func RegisterForm(c echo.Context) error {
@@ -68,7 +59,7 @@ func Register(c echo.Context) error {
 		return views.ErrorBlock("Username cannot be less than 4 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 	user.Username = c.Request().FormValue("username")
-    p, err := utils.HashPassword(password)
+	p, err := utils.HashPassword(password)
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
@@ -78,26 +69,32 @@ func Register(c echo.Context) error {
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
-	return c.Redirect(http.StatusSeeOther, "/home")
+	return c.Redirect(http.StatusSeeOther, "/templates")
 }
 
 func LoginAsGuestForm(c echo.Context) error {
+
 	return views.LoginAsGuest().Render(c.Request().Context(), c.Response().Writer)
 }
 
 func LoginAsGuest(c echo.Context) error {
 	name := c.FormValue("name")
+
 	if len(name) == 0 {
 		return views.ErrorBlock("Name cannot be empty").Render(c.Request().Context(), c.Response().Writer)
 	}
+    next := c.QueryParams()["next"][0]
+    if next == "" {
+        next = "/"
+    }
 	utils.WriteCookie(c, "name", name)
-	return c.Redirect(http.StatusSeeOther, "/home")
+	return c.Redirect(http.StatusSeeOther, next)
 }
 
 func History(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		return c.Redirect(http.StatusSeeOther, "/home")
+		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	retros, _ := models.FetchRetrosByUser(user.Value)
 	return views.HistoryPage(retros).Render(c.Request().Context(), c.Response().Writer)

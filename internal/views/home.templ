@@ -6,13 +6,17 @@ templ HomePage() {
 	@head("Home")
 	<body>
 		<a href="/history">History</a>
-        <a href="/templates">New retro</a>
+		<a href="/templates">New retro</a>
 	</body>
 }
 
 templ HistoryPage(retros []models.Retro) {
 	@head("History")
-	for _, retro := range retros {
-		<a href={ templ.URL("/retro/" + retro.Id.String()) }>{ retro.Created }</a>
+	if len(retros) != 0 {
+		for _, retro := range retros {
+			<a href={ templ.URL("/retro/" + retro.Id.String()) }>{ retro.Created }</a>
+		}
+	} else {
+		<a href="/templates">You don't have any retro yet, but you can create one here</a>
 	}
 }

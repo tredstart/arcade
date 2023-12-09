@@ -5,6 +5,7 @@ import (
 	"arcade/internal/utils"
 	"arcade/internal/views"
 	"log"
+	"net/http"
 	"regexp"
 	"strings"
 	"time"
@@ -14,15 +15,14 @@ import (
 )
 
 func RetroPage(c echo.Context) error {
-    if _, err := utils.ReadCookie(c, "name"); err != nil {
-        // redirect to form
-        return views.ErrorBlock("").Render(c.Request().Context(), c.Response().Writer)
-    }
 
 	retro_id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
+    if _, err := utils.ReadCookie(c, "name"); err != nil {
+        return c.Redirect(http.StatusSeeOther, "/guest?next=/retro/" + retro_id.String())
+    }
 	retro, err := models.FetchRetro(retro_id)
 	if err != nil {
 		return views.ErrorBlock("Couldn't find this retro").Render(c.Request().Context(), c.Response().Writer)
@@ -94,11 +94,10 @@ func RetroCreate(c echo.Context) error {
 		log.Println("Error while creating new retro: ", err)
 		return views.ErrorBlock("Couldn't create new retro").Render(c.Request().Context(), c.Response().Writer)
 	}
-	return views.SuccessBlock("Succesfully created new retro").Render(c.Request().Context(), c.Response().Writer)
+	return c.Redirect(http.StatusSeeOther, "/retro/" + new_retro.Id.String())
 }
 
 func Templates(c echo.Context) error {
-	// render a list of templates for some user
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
