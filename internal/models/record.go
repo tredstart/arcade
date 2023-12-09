@@ -26,7 +26,7 @@ func FetchRecord(id uuid.UUID) (Record, error) {
 func FetchRecordsByRetro(retro_id uuid.UUID) ([]Record, error) {
 	var records []Record
 	if err := database.DB.Select(&records, `SELECT * FROM record WHERE retro = ?`, retro_id); err != nil {
-        log.Println("Couldn't get any records: ", err)
+		log.Println("Couldn't get any records: ", err)
 		return []Record{}, err
 	}
 	return records, nil

@@ -14,17 +14,17 @@ import (
 )
 
 func RetroPage(c echo.Context) error {
-	retro_id, err := uuid.Parse(c.QueryParam("id"))
+	retro_id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		return err
 	}
 	retro, err := models.FetchRetro(retro_id)
 	if err != nil {
-		return err
+		return c.String(http.StatusTeapot, "Couldn't find this retro")
 	}
 	template, err := models.FetchTemplate(retro.Template)
 	if err != nil {
-		return err
+		return c.String(http.StatusTeapot, "Couldn't find this template")
 	}
 
 	records, _ := models.FetchRecordsByRetro(retro_id)
@@ -42,7 +42,7 @@ func RetroPage(c echo.Context) error {
 			}
 		}
 	}
-	return nil
+	return views.RetroPage(context).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroItemCreate(c echo.Context) error {
@@ -50,7 +50,9 @@ func RetroItemCreate(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	retro_id := uuid.MustParse(c.QueryParam("id"))
+    id := c.Param("id")
+    log.Println(id, len(id))
+	retro_id := uuid.MustParse(id)
 	category := c.FormValue("category")
 	content := c.FormValue("content")
 	var record models.Record
@@ -87,6 +89,7 @@ func RetroCreate(c echo.Context) error {
 func Templates(c echo.Context) error {
 	// render a list of templates for some user
 	user, err := utils.ReadCookie(c, "user")
+    log.Println(user.Value, len(user.Value))
 	if err != nil {
 		return err
 	}

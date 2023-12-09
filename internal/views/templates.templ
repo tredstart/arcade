@@ -12,9 +12,13 @@ script addInput() {
 templ Templates(templates []models.Template) {
 	@head("Templates")
 	<body>
-		<a href="/retro/templates/new">New template</a>
+		<a href="/templates/new">New template</a>
 		for _, template := range templates {
 			<p>{ template.Categories }</p>
+			<form method="post" action="/retro/new">
+				<input type="hidden" name="template_id" value={ template.Id.String() }/>
+				<input type="submit" value="Create retro from this template"/>
+			</form>
 		}
 	</body>
 }

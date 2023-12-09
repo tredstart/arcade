@@ -41,8 +41,8 @@ func CreateRetro(t *Retro) error {
 	if _, err := database.DB.Exec(
 		`INSERT INTO retro VALUES (?, ?, ?, ?)`,
 		t.Id,
-		t.Created,
 		t.User,
+		t.Created,
 		t.Template,
 	); err != nil {
 		return err

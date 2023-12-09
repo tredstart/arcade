@@ -24,12 +24,12 @@ func (s *Server) RegisterRoutes() http.Handler {
     e.GET("/history", routes.History)
 
     // basically the whole retro logic that i can group into retro package
-    // e.GET("/retro/:url") -> should verify if user is in local storage or some shit
-    // e.POST("/retro/:url") -> does a post to create an item in retro box
-    // e.POST("/retro/new")
-    e.GET("/retro/templates", routes.Templates)
-    e.GET("/retro/templates/new", routes.TemplatesNew)
-    e.POST("/retro/templates/new", routes.TempalatesCreate)
+    e.GET("/retro/:id", routes.RetroPage) // -> should verify if user is in local storage or some shit
+    e.POST("/retro/:id", routes.RetroItemCreate) // -> does a post to create an item in retro box
+    e.POST("/retro/new", routes.RetroCreate)
+    e.GET("/templates", routes.Templates)
+    e.GET("/templates/new", routes.TemplatesNew)
+    e.POST("/templates/new", routes.TempalatesCreate)
 
 	return e
 }
