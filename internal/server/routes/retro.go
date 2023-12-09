@@ -5,7 +5,6 @@ import (
 	"arcade/internal/utils"
 	"arcade/internal/views"
 	"log"
-	"net/http"
 	"regexp"
 	"strings"
 	"time"
@@ -15,6 +14,11 @@ import (
 )
 
 func RetroPage(c echo.Context) error {
+    if _, err := utils.ReadCookie(c, "name"); err != nil {
+        // redirect to form
+        return views.ErrorBlock("").Render(c.Request().Context(), c.Response().Writer)
+    }
+
 	retro_id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
@@ -31,14 +35,14 @@ func RetroPage(c echo.Context) error {
 	records, _ := models.FetchRecordsByRetro(retro_id)
 	categories := strings.Split(template.Categories, ", ")
 	context := make(map[string][]models.Record)
-    c_ids := make(map[string]string)
+	c_ids := make(map[string]string)
 
 	user, _ := utils.ReadCookie(c, "user")
 	for _, category := range categories {
 		context[category] = []models.Record{}
 
-        regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
-        c_ids[category] = regex.ReplaceAllString(category, "_")
+		regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
+		c_ids[category] = regex.ReplaceAllString(category, "_")
 		if user != nil {
 			for _, record := range records {
 				if record.Category == category {
@@ -55,20 +59,23 @@ func RetroItemCreate(c echo.Context) error {
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
-    id := c.Param("id")
+	id := c.Param("id")
 	retro_id := uuid.MustParse(id)
 	category := c.FormValue("category")
 	content := c.FormValue("content")
+	if len(content) == 0 {
+		return views.ErrorBlock("Cannot create item with empty content").Render(c.Request().Context(), c.Response().Writer)
+	}
 	var record models.Record
 	record.Id = uuid.New()
 	record.Retro = retro_id
 	record.Author = name.Value
 	record.Category = category
 	record.Content = content
-    if err = models.CreateRecord(&record); err != nil {
+	if err = models.CreateRecord(&record); err != nil {
 		log.Println("Error while creating new record: ", err)
 		return views.ErrorBlock("Couldn't create new record").Render(c.Request().Context(), c.Response().Writer)
-    }
+	}
 	return views.RetroItem(record.Content, record.Author).Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -94,17 +101,16 @@ func Templates(c echo.Context) error {
 	// render a list of templates for some user
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-        return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	templates, _ := models.FetchTemplatesByUser(user.Value)
 	return views.Templates(templates).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func TemplatesNew(c echo.Context) error {
-	// render a form for new tempalates
 	_, err := utils.ReadCookie(c, "user")
 	if err != nil {
-        return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	return views.CreateTemplateForm().Render(c.Request().Context(), c.Response().Writer)
 }
@@ -112,18 +118,21 @@ func TemplatesNew(c echo.Context) error {
 func TempalatesCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	c.Request().ParseForm()
 	data := strings.Join(c.Request().Form["categories"], ", ")
+	if len(data) == 0 {
+		return views.ErrorBlock("Cannot create template with empty categories").Render(c.Request().Context(), c.Response().Writer)
+	}
 	new_template := models.Template{}
 	new_template.Id = uuid.New()
 	new_template.User = uuid.MustParse(user.Value)
 	new_template.Categories = data
 	if err := models.CreateTemplate(&new_template); err != nil {
-		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 
-    c.Response().Header().Set("HX-Trigger", "newTemplate")
+	c.Response().Header().Set("HX-Trigger", "newTemplate")
 	return views.SuccessBlock("Succesfully created new template").Render(c.Request().Context(), c.Response().Writer)
 }
