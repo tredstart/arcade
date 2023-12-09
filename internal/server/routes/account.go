@@ -4,6 +4,7 @@ import (
 	"arcade/internal/models"
 	"arcade/internal/utils"
 	"arcade/internal/views"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -32,10 +33,11 @@ func Login(c echo.Context) error {
 	p := c.Request().FormValue("password")
 	user, err := models.FetchUserByUsername(username)
 	if err != nil {
-		return err
+		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
 	}
 	if p != user.Password {
-		return &utils.CustomError{S: "Wrong password"}
+		err = &utils.CustomError{S: "Wrong password"}
+		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
@@ -50,7 +52,8 @@ func Register(c echo.Context) error {
 	var user models.User
 	password := c.Request().FormValue("password")
 	if password != c.Request().FormValue("confirm") {
-		return &utils.CustomError{S: "Passwords are not same"}
+        err := &utils.CustomError{S: "Passwords are not same"}
+		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
 	}
 	user.Id = uuid.New()
 	user.Name = c.Request().FormValue("name")
@@ -58,7 +61,7 @@ func Register(c echo.Context) error {
 	// TODO: this should also be hashed
 	user.Password = password
 	if err := models.CreateUser(&user); err != nil {
-		return err
+		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
 	}
 	// TODO: figure out how to do redirect
 	//else {

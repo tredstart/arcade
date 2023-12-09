@@ -9,32 +9,37 @@ script addInput() {
     container.appendChild(input);
 }
 
+templ NewTemplateForm() {
+	<div id="new-template-form">
+		<a hx-get="/templates/new" hx-swap="outerHTML" hx-target="#new-template-form">New template</a>
+	</div>
+}
+
 templ Templates(templates []models.Template) {
 	@head("Templates")
 	<body>
-		<a href="/templates/new">New template</a>
-		for _, template := range templates {
-			<p>{ template.Categories }</p>
-			<form method="post" action="/retro/new">
-				<input type="hidden" name="template_id" value={ template.Id.String() }/>
-				<input type="submit" value="Create retro from this template"/>
-			</form>
-		}
+		@NewTemplateForm()
+		<div id="templates-list" hx-get="/templates" hx-trigger="newTemplate from:body">
+			for _, template := range templates {
+				<p>{ template.Categories }</p>
+				<form method="post" action="/retro/new">
+					<input type="hidden" name="template_id" value={ template.Id.String() }/>
+					<input type="submit" value="Create retro from this template"/>
+				</form>
+			}
+		</div>
 	</body>
 }
 
 templ CreateTemplateForm() {
-	@head("New template")
-	<body>
-		<form method="post">
-			<div id="inputsContainer">
-				<label for="categories">
-					Categories
-				</label>
-				<input name="categories" type="text"/>
-			</div>
-			<input type="button" onclick={ addInput() } value="Add Category"/>
-			<input type="submit" value="Create"/>
-		</form>
-	</body>
+	<form hx-post="/templates/new" hx-swap="outerHTML">
+		<div id="inputsContainer">
+			<label for="categories">
+				Categories
+			</label>
+			<input name="categories" type="text"/>
+		</div>
+		<input type="button" onclick={ addInput() } value="Add Category"/>
+		<input type="submit" value="Create"/>
+	</form>
 }

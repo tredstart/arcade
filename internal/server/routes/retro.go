@@ -17,15 +17,15 @@ import (
 func RetroPage(c echo.Context) error {
 	retro_id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return err
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	retro, err := models.FetchRetro(retro_id)
 	if err != nil {
-		return c.String(http.StatusTeapot, "Couldn't find this retro")
+		return views.ErrorBlock("Couldn't find this retro").Render(c.Request().Context(), c.Response().Writer)
 	}
 	template, err := models.FetchTemplate(retro.Template)
 	if err != nil {
-		return c.String(http.StatusTeapot, "Couldn't find this template")
+		return views.ErrorBlock("Couldn't find this template").Render(c.Request().Context(), c.Response().Writer)
 	}
 
 	records, _ := models.FetchRecordsByRetro(retro_id)
@@ -53,10 +53,9 @@ func RetroPage(c echo.Context) error {
 func RetroItemCreate(c echo.Context) error {
 	name, err := utils.ReadCookie(c, "name")
 	if err != nil {
-		return err
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
     id := c.Param("id")
-    log.Println(id, len(id))
 	retro_id := uuid.MustParse(id)
 	category := c.FormValue("category")
 	content := c.FormValue("content")
@@ -68,7 +67,7 @@ func RetroItemCreate(c echo.Context) error {
 	record.Content = content
     if err = models.CreateRecord(&record); err != nil {
 		log.Println("Error while creating new record: ", err)
-		return c.String(http.StatusTeapot, "Couldn't create new record")
+		return views.ErrorBlock("Couldn't create new record").Render(c.Request().Context(), c.Response().Writer)
     }
 	return views.RetroItem(record.Content, record.Author).Render(c.Request().Context(), c.Response().Writer)
 }
@@ -76,7 +75,7 @@ func RetroItemCreate(c echo.Context) error {
 func RetroCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		return err
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	template_id := c.FormValue("template_id")
 	new_retro := models.Retro{}
@@ -86,20 +85,18 @@ func RetroCreate(c echo.Context) error {
 	new_retro.Created = time.Now().Format("2006-01-02")
 	if err := models.CreateRetro(&new_retro); err != nil {
 		log.Println("Error while creating new retro: ", err)
-		return c.String(http.StatusTeapot, "Couldn't create new retro")
+		return views.ErrorBlock("Couldn't create new retro").Render(c.Request().Context(), c.Response().Writer)
 	}
-	return c.String(http.StatusCreated, "Retro created successfuly")
+	return views.SuccessBlock("Succesfully created new retro").Render(c.Request().Context(), c.Response().Writer)
 }
 
 func Templates(c echo.Context) error {
 	// render a list of templates for some user
 	user, err := utils.ReadCookie(c, "user")
-    log.Println(user.Value, len(user.Value))
 	if err != nil {
-		return err
+        return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	templates, _ := models.FetchTemplatesByUser(user.Value)
-	log.Println(templates)
 	return views.Templates(templates).Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -107,7 +104,7 @@ func TemplatesNew(c echo.Context) error {
 	// render a form for new tempalates
 	_, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		return err
+        return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	return views.CreateTemplateForm().Render(c.Request().Context(), c.Response().Writer)
 }
@@ -115,7 +112,7 @@ func TemplatesNew(c echo.Context) error {
 func TempalatesCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		return err
+		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
 	}
 	c.Request().ParseForm()
 	data := strings.Join(c.Request().Form["categories"], ", ")
@@ -124,8 +121,9 @@ func TempalatesCreate(c echo.Context) error {
 	new_template.User = uuid.MustParse(user.Value)
 	new_template.Categories = data
 	if err := models.CreateTemplate(&new_template); err != nil {
-		return err
+		return c.HTML(http.StatusTeapot, "<div>" + err.Error() + "</div>")
 	}
 
-	return nil
+    c.Response().Header().Set("HX-Trigger", "newTemplate")
+	return views.SuccessBlock("Succesfully created new template").Render(c.Request().Context(), c.Response().Writer)
 }
