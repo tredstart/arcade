@@ -37,14 +37,6 @@ func FetchRetrosByUser(user_id string) ([]Retro, error) {
 	return retros, nil
 }
 
-func FetchRetros() ([]Retro, error) {
-	var retros []Retro
-	if err := database.DB.Select(&retros, `SELECT * FROM retro`); err != nil {
-		return []Retro{}, err
-	}
-	return retros, nil
-}
-
 func CreateRetro(t *Retro) error {
 	if _, err := database.DB.Exec(
 		`INSERT INTO retro VALUES (?, ?, ?, ?)`,

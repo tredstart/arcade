@@ -2,13 +2,13 @@ package models
 
 import (
 	"arcade/internal/database"
+	"log"
 
 	"github.com/google/uuid"
 )
 
 type Record struct {
 	Id       uuid.UUID
-	User     uuid.UUID
 	Retro    uuid.UUID
 	Author   string
 	Category string
@@ -23,9 +23,10 @@ func FetchRecord(id uuid.UUID) (Record, error) {
 	return record, nil
 }
 
-func FetchRecords() ([]Record, error) {
+func FetchRecordsByRetro(retro_id uuid.UUID) ([]Record, error) {
 	var records []Record
-	if err := database.DB.Select(&records, `SELECT * FROM record`); err != nil {
+	if err := database.DB.Select(&records, `SELECT * FROM record WHERE retro = ?`, retro_id); err != nil {
+        log.Println("Couldn't get any records: ", err)
 		return []Record{}, err
 	}
 	return records, nil
@@ -33,10 +34,9 @@ func FetchRecords() ([]Record, error) {
 
 func CreateRecord(t *Record) error {
 	if _, err := database.DB.Exec(
-		`INSERT INTO record VALUES (?, ?, ?, ?, ?, ?)`,
+		`INSERT INTO record VALUES (?, ?, ?, ?, ?)`,
 		t.Id,
 		t.Retro,
-		t.User,
 		t.Author,
 		t.Category,
 		t.Content,
