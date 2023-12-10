@@ -14,3 +14,4 @@ Congrats! Now you just share the link, and anybody can leave a comment under a c
 - [ ] Add more tests  
 - [ ] Improve error handling  
 - [ ] Provide user profile
+- [ ] Add ability to use global templates 
