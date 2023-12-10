@@ -1,0 +1,28 @@
+@import "../abstracts/variables";
+
+.primary-input{
+  width: 100%;
+  height: 35px;
+  padding: 0 15px;
+  display: block;
+  border: 1px solid @darkColor;
+  border-radius: 5px;
+  outline: none;
+}
+
+.primary-button{
+  width: 150px;
+  height: 35px;
+  border-radius: 5px;
+  background: @darkColor;
+  color: @whiteColor;
+  cursor: pointer;
+  outline: none;
+  border: none;
+
+  &:disabled{
+    opacity: 0.5;
+    cursor: none;
+    pointer-events: none;
+  }
+}

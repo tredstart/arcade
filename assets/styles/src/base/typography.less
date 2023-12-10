@@ -1,0 +1,58 @@
+@import "../abstracts/variables.less";
+@import url('https://fonts.googleapis.com/css2?family=Ephesis&family=Inter:wght@400;500&family=Roboto:wght@400;700&display=swap');
+body{
+    background-color: @whiteColor;
+    font-family: 'Roboto', sans-serif;
+    color: @darkColor;
+    font-size: 100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+    margin: @elementSpace 0;
+    line-height: 1.13;
+    word-break: break-word;
+}
+h1 {
+    font-size: @h1-size;
+    font-weight: 400;
+    text-transform: uppercase;
+}   
+
+h2 {
+    font-size: @h2-size;
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: @h3-size;
+    text-transform: uppercase;
+}
+
+h4 {
+    font-size: @h4-size;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+h5 {
+    font-size: @h5-size;
+}
+
+h6 {
+    font-size: @h6-size;
+}
+
+p, span, textarea, input, a{
+    text-decoration: none;
+    outline: none;
+    line-height: 1.5;
+}
+span{
+    font-size: @h6-size;
+}
+strong{
+    font-weight: 800;
+}
+.medium-weight{
+    font-weight: 500;
+}

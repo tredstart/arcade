@@ -15,3 +15,5 @@ Congrats! Now you just share the link, and anybody can leave a comment under a c
 - [ ] Improve error handling  
 - [ ] Provide user profile
 - [ ] Add ability to use global templates 
+- [ ] (Optional) Add more of that sweet htmx for better experience 
+- [ ] Improve sql queries

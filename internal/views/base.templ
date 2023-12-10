@@ -4,6 +4,24 @@ templ head(title string) {
 	<head>
 		<title>{ title }</title>
 		<meta charset="UTF-8"/>
-	<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link rel="stylesheet" type="text/css" href="/static/styles/dist/style.min.css"/>
 	</head>
+}
+
+templ aside(){
+        
+      <aside class="sidebar">
+          <div class="sidebar-title">
+              <h5>Arcade</h5>
+          </div>
+          <div class="sidebar-content">
+              <ul class="sidebar-content-menu">
+                  <li><a href="/templates">Templates</a></li>
+                  <li><a href="/history">History</a></li>
+                  <li></li>
+              </ul>
+          </div>
+      </aside>
 }

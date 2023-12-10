@@ -51,7 +51,7 @@ func RetroPage(c echo.Context) error {
 			}
 		}
 	}
-	return views.RetroPage(context, c_ids).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroPage(context, c_ids, "Retro from " + string(retro.Created)).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroItemCreate(c echo.Context) error {

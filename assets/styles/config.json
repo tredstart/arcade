@@ -1,0 +1,9 @@
+{
+    "watchFolder": "assets/styles/src",   
+    "outputFolder": "assets/styles/dist",
+    "mainFile": "style.less",   
+    "minified": true,
+    "sourceMap": false,
+    "runOnce": false,
+    "enableJs": true
+}

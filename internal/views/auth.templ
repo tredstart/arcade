@@ -3,33 +3,50 @@ package views
 templ Login() {
 	@head("Login")
 	<body>
-		<form method="post">
-			<input type="text" name="username"/>
-			<input type="password" name="password"/>
-			<input type="submit" value="Login"/>
-		</form>
+		<div class="auth-layout">
+			<div class="auth-container">
+				<h5>Retro Board</h5>
+				<form method="post">
+					<input class="primary-input" type="text" placeholder="Username" name="username"/>
+					<input class="primary-input" type="password" placeholder="Password" name="password"/>
+					<button class="primary-button">Login</button>
+				</form>
+				<a href="/register">Don't have an account? Create new!</a>
+			</div>
+		</div>
 	</body>
 }
 
 templ Register() {
 	@head("Register")
 	<body>
-		<form method="post">
-			<input type="text" name="username"/>
-			<input type="text" name="name"/>
-			<input type="password" name="password"/>
-			<input type="password" name="confirm"/>
-			<input type="submit" value="Sign up"/>
-		</form>
+		<div class="auth-layout">
+			<div class="auth-container">
+				<h5>Retro Board</h5>
+				<form method="post">
+					<input class="primary-input" type="text" placeholder="Username" name="username"/>
+					<input class="primary-input" type="text" placeholder="Name" name="name"/>
+					<input class="primary-input" type="password" placeholder="Password" name="password"/>
+					<input class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
+					<button class="primary-button">Create account </button>
+				</form>
+				<a href="/login">Aready have an account? Log in!</a>
+			</div>
+		</div>
 	</body>
 }
 
 templ LoginAsGuest() {
 	@head("Login as guest")
 	<body>
-		<form method="post">
-			<input type="text" name="name"/>
-			<input type="submit" value="Sign up"/>
-		</form>
+		<div class="auth-layout">
+			<div class="auth-container">
+				<h5>Retro Board</h5>
+				<form method="post">
+					<input class="primary-input" placeholder="Please provide your name" type="text" name="name"/>
+					<button class="primary-button">Create account </button>
+				</form>
+			</div>
+		</div>
 	</body>
 }
