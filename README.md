@@ -1,36 +1,16 @@
 
-# Project arcade
+# Project Arcade
 
-One Paragraph of project description goes here
+A simplistic tool to manage retrospectives.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+If you're interested in providing a retro for your team, you can do it in no time. Just register or log in (no emails or confirmations required). ******provide screenshot******   
+After this, you will be able to create a new template for your next retro. *********screenshot again*********  
+Then, by clicking on the link with the template you've created, a retro is initiated. ***screen*** 
+Congrats! Now you just share the link, and anybody can leave a comment under a category, providing their name/nickname, of course. As simple as that.
 
-## MakeFile
-
-run all make commands with clean tests
-```bash
-make all build
-```
-
-build the application
-```bash
-make build
-```
-
-run the application
-```bash
-make run
-```
-
-run the test suite
-```bash
-make test
-```
-
-clean up binary from the last build
-```bash
-make clean
-```
-	
+## Stuff to improve in near future in no particular order
+- [ ] Add more tests  
+- [ ] Improve error handling  
+- [ ] Provide user profile
