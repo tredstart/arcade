@@ -19,7 +19,7 @@ test:
 
 migrate: 
 	@echo "Migrating..."
-	@sqlite3 prod.db < migrations/create.sql
+	@sqlite3 testing.db < migrations/create.sql
 
 # Clean the binary
 clean:

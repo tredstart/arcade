@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-    database.DB = sqlx.MustConnect("sqlite3", "prod.db")
+    database.DB = sqlx.MustConnect("sqlite3", "testing.db")
 	server := server.NewServer()
 
 	err := server.ListenAndServe()

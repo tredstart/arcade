@@ -100,7 +100,7 @@ func RetroCreate(c echo.Context) error {
 func Templates(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	templates, _ := models.FetchTemplatesByUser(user.Value)
 	return views.Templates(templates).Render(c.Request().Context(), c.Response().Writer)
