@@ -2,6 +2,7 @@ package utils
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -41,4 +42,13 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
     err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
     return err == nil
+}
+
+func ReadEnvVar(name string) (string, error) {
+    env_var, exists := os.LookupEnv(name)
+    if !exists || env_var == "" {
+        err := &CustomError{S: "Variable: " + name + "is empty or does not exists"}
+        return "", err
+    }
+    return env_var, nil
 }

@@ -1,19 +1,31 @@
 package main
 
 import (
+	"arcade/internal/database"
 	"arcade/internal/server"
-    "arcade/internal/database"
-    "github.com/jmoiron/sqlx"
-    
-    _ "github.com/mattn/go-sqlite3"
+	"arcade/internal/utils"
+	"log"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/libsql/libsql-client-go/libsql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 
-    database.DB = sqlx.MustConnect("sqlite3", "testing.db")
+    token, _ := utils.ReadEnvVar("TOKEN")
+    db_url, err := utils.ReadEnvVar("TURSO")
+
+    if err != nil {
+        log.Println(err)
+        db_url = "file:testing.db"
+    }
+
+    
+    database.DB = sqlx.MustConnect("libsql", db_url + token)
 	server := server.NewServer()
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil {
 		panic("cannot start server")
 	}
