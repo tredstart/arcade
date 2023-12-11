@@ -14,15 +14,15 @@ import "arcade/internal/models"
 
 func addInput() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_addInput_acc9`,
-		Function: `function __templ_addInput_acc9(){var container = document.getElementById('inputsContainer');
+		Name: `__templ_addInput_5a15`,
+		Function: `function __templ_addInput_5a15(){var container = document.getElementById('inputsContainer');
     var input = document.createElement('input');
     input.name = 'categories';
-    input.class = 'primary-input';
     input.placeholder = 'Category';
+    input.classList.add('primary-input');
     container.appendChild(input);}`,
-		Call:       templ.SafeScript(`__templ_addInput_acc9`),
-		CallInline: templ.SafeScriptInline(`__templ_addInput_acc9`),
+		Call:       templ.SafeScript(`__templ_addInput_5a15`),
+		CallInline: templ.SafeScriptInline(`__templ_addInput_5a15`),
 	}
 }
 
@@ -39,7 +39,7 @@ func NewTemplateForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"new-template-form\"><a hx-get=\"/templates/new\" hx-swap=\"outerHTML\" hx-target=\"#new-template-form\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"new-template-form\"><button class=\"primary-button\" hx-get=\"/templates/new\" hx-swap=\"outerHTML\" hx-target=\"#new-template-form\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -48,7 +48,7 @@ func NewTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,7 +76,15 @@ func Templates(templates []models.Template) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\"><div class=\"full-size-container center-all\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = aside().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"default-container\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -84,7 +92,7 @@ func Templates(templates []models.Template) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"templates-list\" hx-get=\"/templates\" hx-trigger=\"newTemplate from:body\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"templates-list\" hx-target=\"body\" hx-swap=\"outerHTML\" hx-get=\"/templates\" hx-trigger=\"newTemplate from:body\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -161,7 +169,7 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"primary-button\" onclick=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input type=\"button\" class=\"primary-button\" onclick=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -170,21 +178,12 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" value=\"Add category\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var9 := `Add category `
+		templ_7745c5c3_Var9 := `Submit `
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button> <button class=\"primary-button\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Var10 := `Submit `
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -22,22 +22,24 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 				<div class="default-container-title">
 					<h6>{ retro_title }</h6>
 				</div>
-				for category := range records {
-					<div id={ c_ids[category] } class="column">
-						<form hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
-							<div class="column-title">
-								<p>{ category }</p>
-							</div>
-							<input type="hidden" name="category" value={ category }/>
-							// TODO: this is a text area
-							<input class="primary-input" placeholder="Content" type="text" name="content"/>
-							<button class="primary-button">Post</button>
-						</form>
-						for _, record := range records[category] {
-							@RetroItem(record.Content, record.Author)
-						}
-					</div>
-				}
+				<div class="columns-container">
+					for category := range records {
+						<div id={ c_ids[category] } class="column">
+							<form hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
+								<div class="column-title">
+									<p>{ category }</p>
+								</div>
+								<input type="hidden" name="category" value={ category }/>
+								// TODO: this is a text area
+								<input class="primary-input" placeholder="Content" type="text" name="content"/>
+								<button class="primary-button">Post</button>
+							</form>
+							for _, record := range records[category] {
+								@RetroItem(record.Content, record.Author)
+							}
+						</div>
+					}
+				</div>
 			</div>
 		</div>
 	</body>

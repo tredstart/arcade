@@ -6,14 +6,14 @@ script addInput() {
     var container = document.getElementById('inputsContainer');
     var input = document.createElement('input');
     input.name = 'categories';
-    input.class = 'primary-input';
     input.placeholder = 'Category';
+    input.classList.add('primary-input');
     container.appendChild(input);
 }
 
 templ NewTemplateForm() {
 	<div id="new-template-form">
-		<a hx-get="/templates/new" hx-swap="outerHTML" hx-target="#new-template-form">New template</a>
+		<button class="primary-button" hx-get="/templates/new" hx-swap="outerHTML" hx-target="#new-template-form">New template</button>
 	</div>
 }
 
@@ -21,9 +21,10 @@ templ Templates(templates []models.Template) {
 	@head("Templates")
 	<body>
 		<div class="default-layout">
-			<div class="full-size-container center-all">
+			@aside()
+			<div class="default-container">
 				@NewTemplateForm()
-				<div id="templates-list" hx-get="/templates" hx-trigger="newTemplate from:body">
+				<div id="templates-list" hx-target="body" hx-swap="outerHTML" hx-get="/templates" hx-trigger="newTemplate from:body">
 					for _, template := range templates {
 						<p>{ template.Categories }</p>
 						<form method="post" action="/retro/new">
@@ -43,7 +44,7 @@ templ CreateTemplateForm() {
 		<div id="inputsContainer">
 			<input class="primary-input" placeholder="Category" name="categories" type="text"/>
 		</div>
-		<button class="primary-button" onclick={ addInput() }>Add category </button>
+		<input type="button" class="primary-button" onclick={ addInput() } value="Add category"/>
 		<button class="primary-button">Submit </button>
 	</form>
 }
