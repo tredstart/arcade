@@ -14,15 +14,15 @@ import "arcade/internal/models"
 
 func addInput() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_addInput_5a15`,
-		Function: `function __templ_addInput_5a15(){var container = document.getElementById('inputsContainer');
-    var input = document.createElement('input');
+		Name: `__templ_addInput_3c04`,
+		Function: `function __templ_addInput_3c04(){const container = document.getElementById('inputsContainer');
+    const input = document.createElement('input');
     input.name = 'categories';
     input.placeholder = 'Category';
     input.classList.add('primary-input');
     container.appendChild(input);}`,
-		Call:       templ.SafeScript(`__templ_addInput_5a15`),
-		CallInline: templ.SafeScriptInline(`__templ_addInput_5a15`),
+		Call:       templ.SafeScript(`__templ_addInput_3c04`),
+		CallInline: templ.SafeScriptInline(`__templ_addInput_3c04`),
 	}
 }
 
@@ -106,7 +106,7 @@ func Templates(templates []models.Template) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><form method=\"post\" action=\"/retro/new\"><input type=\"hidden\" name=\"template_id\" value=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><form class=\"primary-form\" method=\"post\" action=\"/retro/new\"><input type=\"hidden\" name=\"template_id\" value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -152,7 +152,7 @@ func CreateTemplateForm() templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form hx-post=\"/templates/new\" hx-swap=\"outerHTML\"><h5>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"primary-form\" hx-post=\"/templates/new\" hx-swap=\"outerHTML\"><h5>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -161,7 +161,7 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><div id=\"inputsContainer\"><input class=\"primary-input\" placeholder=\"Category\" name=\"categories\" type=\"text\"></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><div class=\"inputs-container\" id=\"inputsContainer\"><input class=\"primary-input\" placeholder=\"Category\" name=\"categories\" type=\"text\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
