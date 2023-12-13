@@ -36,7 +36,7 @@ func Login() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form method=\"post\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -91,7 +91,7 @@ func Register() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form method=\"post\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input class=\"primary-input\" type=\"text\" placeholder=\"Name\" name=\"name\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input class=\"primary-input\" type=\"text\" placeholder=\"Name\" name=\"name\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -146,7 +146,7 @@ func LoginAsGuest() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form method=\"post\"><input class=\"primary-input\" placeholder=\"Please provide your name\" type=\"text\" name=\"name\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input class=\"primary-input\" placeholder=\"Please provide your name\" type=\"text\" name=\"name\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

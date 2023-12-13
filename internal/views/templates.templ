@@ -3,8 +3,8 @@ package views
 import "arcade/internal/models"
 
 script addInput() {
-    var container = document.getElementById('inputsContainer');
-    var input = document.createElement('input');
+    const container = document.getElementById('inputsContainer');
+    const input = document.createElement('input');
     input.name = 'categories';
     input.placeholder = 'Category';
     input.classList.add('primary-input');
@@ -27,7 +27,7 @@ templ Templates(templates []models.Template) {
 				<div id="templates-list" hx-target="body" hx-swap="outerHTML" hx-get="/templates" hx-trigger="newTemplate from:body">
 					for _, template := range templates {
 						<p>{ template.Categories }</p>
-						<form method="post" action="/retro/new">
+						<form class="primary-form" method="post" action="/retro/new">
 							<input type="hidden" name="template_id" value={ template.Id.String() }/>
 							<button class="primary-button">Create retro from this template </button>
 						</form>
@@ -39,9 +39,9 @@ templ Templates(templates []models.Template) {
 }
 
 templ CreateTemplateForm() {
-	<form hx-post="/templates/new" hx-swap="outerHTML">
+	<form class="primary-form" hx-post="/templates/new" hx-swap="outerHTML">
 		<h5>Create new template</h5>
-		<div id="inputsContainer">
+		<div class="inputs-container" id="inputsContainer">
 			<input class="primary-input" placeholder="Category" name="categories" type="text"/>
 		</div>
 		<input type="button" class="primary-button" onclick={ addInput() } value="Add category"/>
