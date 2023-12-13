@@ -13,7 +13,7 @@ script addInput() {
 
 templ NewTemplateForm() {
 	<div id="new-template-form">
-		<button class="primary-button" hx-get="/templates/new" hx-swap="outerHTML" hx-target="#new-template-form">New template</button>
+		<a href="/templates/new">New template</a>
 	</div>
 }
 
@@ -39,12 +39,15 @@ templ Templates(templates []models.Template) {
 }
 
 templ CreateTemplateForm() {
-	<form class="primary-form" hx-post="/templates/new" hx-swap="outerHTML">
-		<h5>Create new template</h5>
-		<div class="inputs-container" id="inputsContainer">
-			<input class="primary-input" placeholder="Category" name="categories" type="text"/>
-		</div>
-		<input type="button" class="primary-button" onclick={ addInput() } value="Add category"/>
-		<button class="primary-button">Submit </button>
-	</form>
+	@head("New template")
+	<body>
+		<form class="primary-form" method="post">
+			<h5>Create new template</h5>
+			<div class="inputs-container" id="inputsContainer">
+				<input class="primary-input" placeholder="Category" name="categories" type="text"/>
+			</div>
+			<button class="primary-button" onClick={ addInput() } type="button">Add category </button>
+			<button class="primary-button">Submit </button>
+		</form>
+	</body>
 }

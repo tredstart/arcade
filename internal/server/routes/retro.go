@@ -20,9 +20,9 @@ func RetroPage(c echo.Context) error {
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
-    if _, err := utils.ReadCookie(c, "name"); err != nil {
-        return c.Redirect(http.StatusSeeOther, "/guest?next=/retro/" + retro_id.String())
-    }
+	if _, err := utils.ReadCookie(c, "name"); err != nil {
+		return c.Redirect(http.StatusSeeOther, "/guest?next=/retro/"+retro_id.String())
+	}
 	retro, err := models.FetchRetro(retro_id)
 	if err != nil {
 		return views.ErrorBlock("Couldn't find this retro").Render(c.Request().Context(), c.Response().Writer)
@@ -37,21 +37,22 @@ func RetroPage(c echo.Context) error {
 	context := make(map[string][]models.Record)
 	c_ids := make(map[string]string)
 
-	user, _ := utils.ReadCookie(c, "user")
-	for _, category := range categories {
-		context[category] = []models.Record{}
+	if retro.Visible {
+		for _, category := range categories {
+			context[category] = []models.Record{}
 
-		regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
-		c_ids[category] = regex.ReplaceAllString(category, "_")
-		if user != nil {
+			regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
+			c_ids[category] = regex.ReplaceAllString(category, "_")
 			for _, record := range records {
 				if record.Category == category {
 					context[category] = append(context[category], record)
 				}
 			}
 		}
-	}
-	return views.RetroPage(context, c_ids, "Retro from " + string(retro.Created)).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created)).Render(c.Request().Context(), c.Response().Writer)
+	} else {
+        return c.String(http.StatusOK, "Retro is invisible!");
+    }
 }
 
 func RetroItemCreate(c echo.Context) error {
@@ -90,11 +91,10 @@ func RetroCreate(c echo.Context) error {
 	new_retro.User = uuid.MustParse(user.Value)
 	new_retro.Template = uuid.MustParse(template_id)
 	new_retro.Created = time.Now().Format("2006-01-02")
+    new_retro.Visible = false
 	if err := models.CreateRetro(&new_retro); err != nil {
 		log.Println("Error while creating new retro: ", err)
 		return views.ErrorBlock("Couldn't create new retro").Render(c.Request().Context(), c.Response().Writer)
 	}
-	return c.Redirect(http.StatusSeeOther, "/retro/" + new_retro.Id.String())
+	return c.Redirect(http.StatusSeeOther, "/retro/"+new_retro.Id.String())
 }
-
-

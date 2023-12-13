@@ -46,6 +46,5 @@ func TempalatesCreate(c echo.Context) error {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 
-	c.Response().Header().Set("HX-Trigger", "newTemplate")
-	return views.SuccessBlock("Succesfully created new template").Render(c.Request().Context(), c.Response().Writer)
+	return c.Redirect(http.StatusSeeOther, "/templates")
 }
