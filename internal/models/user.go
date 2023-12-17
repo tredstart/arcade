@@ -12,7 +12,7 @@ type User struct {
 	Password string
 }
 
-func FetchUser(id uuid.UUID) (User, error) {
+func FetchUser(id string) (User, error) {
 	var user User
 	if err := database.DB.Get(&user, `SELECT * FROM user WHERE id = ?`, id); err != nil {
 		return User{}, err
@@ -47,6 +47,22 @@ func CreateUser(t *User) error {
 		return err
 	}
 	return nil
+}
+
+func UpdateUser(t *User) error {
+    if _, err := database.DB.Exec(
+        `UPDATE user
+         SET name = ?, username = ?, password = ? 
+         WHERE id = ?`,
+        t.Name,
+        t.Username,
+        t.Password,
+        t.Id,
+        ); err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func DeleteUser(id uuid.UUID) error {

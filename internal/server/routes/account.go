@@ -58,7 +58,6 @@ func Register(c echo.Context) error {
 	if len(user.Username) < 3 {
 		return views.ErrorBlock("Username cannot be less than 4 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
-	user.Username = c.Request().FormValue("username")
 	p, err := utils.HashPassword(password)
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
@@ -69,6 +68,53 @@ func Register(c echo.Context) error {
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
+	return c.Redirect(http.StatusSeeOther, "/templates")
+}
+
+func UpdateUserForm(c echo.Context) error {
+
+	user_id, err := utils.ReadCookie(c, "user")
+	if err != nil {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+
+	user, err := models.FetchUser(user_id.Value)
+	if err != nil {
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+
+	return views.UpdateUser(user).Render(c.Request().Context(), c.Response().Writer)
+}
+
+func UpdateUser(c echo.Context) error {
+
+	user_id, err := utils.ReadCookie(c, "user")
+	if err != nil {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+
+	user, err := models.FetchUser(user_id.Value)
+	if err != nil {
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+	password := c.Request().FormValue("password")
+	if password != c.Request().FormValue("confirm") {
+		err := &utils.CustomError{S: "Passwords are not same"}
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+
+    // TODO: fix validation (move it to func)
+	user.Name = c.Request().FormValue("name")
+	user.Username = c.Request().FormValue("username")
+	p, err := utils.HashPassword(password)
+	if err != nil {
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+	user.Password = p
+	if err := models.UpdateUser(&user); err != nil {
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+
 	return c.Redirect(http.StatusSeeOther, "/templates")
 }
 
@@ -83,10 +129,10 @@ func LoginAsGuest(c echo.Context) error {
 	if len(name) == 0 {
 		return views.ErrorBlock("Name cannot be empty").Render(c.Request().Context(), c.Response().Writer)
 	}
-    next := c.QueryParams()["next"][0]
-    if next == "" {
-        next = "/"
-    }
+	next := c.QueryParams()["next"][0]
+	if next == "" {
+		next = "/"
+	}
 	utils.WriteCookie(c, "name", name)
 	return c.Redirect(http.StatusSeeOther, next)
 }

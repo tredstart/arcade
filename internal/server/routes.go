@@ -23,6 +23,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/guest", routes.LoginAsGuestForm)
 	e.POST("/guest", routes.LoginAsGuest)
 
+    e.GET("/profile", routes.UpdateUserForm)
+    e.PUT("/profile", routes.UpdateUser)
+
 	e.GET("/retro/:id", routes.RetroPage)
 	e.POST("/retro/:id", routes.RetroItemCreate)
 	e.POST("/retro/new", routes.RetroCreate)

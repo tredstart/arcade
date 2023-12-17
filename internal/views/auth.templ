@@ -1,5 +1,7 @@
 package views
 
+import "arcade/internal/models"
+
 templ Login() {
 	@head("Login")
 	<body>
@@ -17,6 +19,9 @@ templ Login() {
 	</body>
 }
 
+templ UserForm(user models.User, method string) {
+}
+
 templ Register() {
 	@head("Register")
 	<body>
@@ -31,6 +36,27 @@ templ Register() {
 					<button class="primary-button">Create account </button>
 				</form>
 				<a href="/login">Aready have an account? Log in!</a>
+			</div>
+		</div>
+	</body>
+}
+
+templ UpdateUser(user models.User) {
+	@head("Modify user")
+	<body>
+		<div class="default-layout">
+			@aside()
+			<div class="default-container">
+				<div class="default-container-title">
+					<h6>Wanna change your user data?</h6>
+				</div>
+				<form class="primary-form" hx-put="/profile" hx-push-url="true" hx-target="body" hx-swap="outerHTML">
+					<input class="primary-input" type="text" placeholder="Username" name="username" value={ user.Username }/>
+					<input class="primary-input" type="text" placeholder="Name" name="name" value={ user.Name }/>
+					<input class="primary-input" type="password" placeholder="Password" name="password"/>
+					<input class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
+					<button class="primary-button">Create account </button>
+				</form>
 			</div>
 		</div>
 	</body>
