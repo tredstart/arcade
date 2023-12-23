@@ -53,6 +53,21 @@ func RetroPage(c echo.Context) error {
 	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created)).Render(c.Request().Context(), c.Response().Writer)
 }
 
+func RetroMakeVisible(c echo.Context) error {
+	if _, err := utils.ReadCookie(c, "user"); err != nil {
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+	retro_id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+	}
+
+	visible := c.FormValue("visible")
+	_ = !(visible == "true")
+
+	return c.Redirect(http.StatusSeeOther, "/retro/"+retro_id.String())
+}
+
 func RetroItemCreate(c echo.Context) error {
 	name, err := utils.ReadCookie(c, "name")
 	id := c.Param("id")
