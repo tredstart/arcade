@@ -14,15 +14,16 @@ import "arcade/internal/models"
 
 func addInput() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_addInput_3c04`,
-		Function: `function __templ_addInput_3c04(){const container = document.getElementById('inputsContainer');
+		Name: `__templ_addInput_4c19`,
+		Function: `function __templ_addInput_4c19(){const container = document.getElementById('inputsContainer');
     const input = document.createElement('input');
     input.name = 'categories';
     input.placeholder = 'Category';
     input.classList.add('primary-input');
+    input.required = true;
     container.appendChild(input);}`,
-		Call:       templ.SafeScript(`__templ_addInput_3c04`),
-		CallInline: templ.SafeScriptInline(`__templ_addInput_3c04`),
+		Call:       templ.SafeScript(`__templ_addInput_4c19`),
+		CallInline: templ.SafeScriptInline(`__templ_addInput_4c19`),
 	}
 }
 
@@ -76,7 +77,7 @@ func Templates(templates []models.Template) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\" hx-boost=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -92,7 +93,7 @@ func Templates(templates []models.Template) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"templates-list\" hx-target=\"body\" hx-swap=\"outerHTML\" hx-get=\"/templates\" hx-trigger=\"newTemplate from:body\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"templates-list\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -156,7 +157,15 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><form class=\"primary-form\" method=\"post\"><h5>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\" hx-boost=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = aside().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form class=\"primary-form\" method=\"post\"><h5>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -165,7 +174,7 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><div class=\"inputs-container\" id=\"inputsContainer\"><input class=\"primary-input\" placeholder=\"Category\" name=\"categories\" type=\"text\"></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><div class=\"inputs-container\" id=\"inputsContainer\"><input required class=\"primary-input\" placeholder=\"Category\" name=\"categories\" type=\"text\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -200,7 +209,7 @@ func CreateTemplateForm() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></form></body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></form></div></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -37,31 +37,29 @@ func RetroPage(c echo.Context) error {
 	context := make(map[string][]models.Record)
 	c_ids := make(map[string]string)
 
-	if retro.Visible {
-		for _, category := range categories {
-			context[category] = []models.Record{}
+	for _, category := range categories {
+		context[category] = []models.Record{}
 
-			regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
-			c_ids[category] = regex.ReplaceAllString(category, "_")
+		regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
+		c_ids[category] = regex.ReplaceAllString(category, "_")
+		if retro.Visible {
 			for _, record := range records {
 				if record.Category == category {
 					context[category] = append(context[category], record)
 				}
 			}
 		}
+	}
 	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created)).Render(c.Request().Context(), c.Response().Writer)
-	} else {
-        return c.String(http.StatusOK, "Retro is invisible!");
-    }
 }
 
 func RetroItemCreate(c echo.Context) error {
 	name, err := utils.ReadCookie(c, "name")
-	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
-	}
 	id := c.Param("id")
 	retro_id := uuid.MustParse(id)
+	if err != nil {
+		return c.Redirect(http.StatusSeeOther, "/guest?next=/retro/"+retro_id.String())
+	}
 	category := c.FormValue("category")
 	content := c.FormValue("content")
 	if len(content) == 0 {
@@ -91,7 +89,7 @@ func RetroCreate(c echo.Context) error {
 	new_retro.User = uuid.MustParse(user.Value)
 	new_retro.Template = uuid.MustParse(template_id)
 	new_retro.Created = time.Now().Format("2006-01-02")
-    new_retro.Visible = false
+	new_retro.Visible = false
 	if err := models.CreateRetro(&new_retro); err != nil {
 		log.Println("Error while creating new retro: ", err)
 		return views.ErrorBlock("Couldn't create new retro").Render(c.Request().Context(), c.Response().Writer)

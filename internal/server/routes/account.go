@@ -11,23 +11,22 @@ import (
 )
 
 func LoginForm(c echo.Context) error {
-	return views.Login().Render(c.Request().Context(), c.Response().Writer)
+	return views.Login("").Render(c.Request().Context(), c.Response().Writer)
 }
 
 func Login(c echo.Context) error {
 	username := c.Request().FormValue("username")
 	if len(username) < 3 {
-		return views.ErrorBlock("Username cannot be less than 4 characters").Render(c.Request().Context(), c.Response().Writer)
+		return views.Login("Username must be longer than 3 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 
 	p := c.Request().FormValue("password")
 	user, err := models.FetchUserByUsername(username)
 	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return views.Login(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	if !utils.CheckPasswordHash(p, user.Password) {
-		err = &utils.CustomError{S: "Wrong password"}
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return views.Login("Wrong password").Render(c.Request().Context(), c.Response().Writer)
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
@@ -103,7 +102,7 @@ func UpdateUser(c echo.Context) error {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 
-    // TODO: fix validation (move it to func)
+	// TODO: fix validation (move it to func)
 	user.Name = c.Request().FormValue("name")
 	user.Username = c.Request().FormValue("username")
 	p, err := utils.HashPassword(password)
@@ -119,7 +118,6 @@ func UpdateUser(c echo.Context) error {
 }
 
 func LoginAsGuestForm(c echo.Context) error {
-
 	return views.LoginAsGuest().Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -143,5 +141,6 @@ func History(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	retros, _ := models.FetchRetrosByUser(user.Value)
+	retros = utils.Reverse[models.Retro](retros)
 	return views.HistoryPage(retros).Render(c.Request().Context(), c.Response().Writer)
 }

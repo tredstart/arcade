@@ -12,7 +12,7 @@ import "bytes"
 
 import "arcade/internal/models"
 
-func Login() templ.Component {
+func Login(err string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -29,7 +29,7 @@ func Login() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"auth-layout\"><div class=\"auth-container\"><h5>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"auth-layout\" hx-boost=\"true\"><div class=\"auth-container\"><h5>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -38,7 +38,17 @@ func Login() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input required class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if err != "" {
+			templ_7745c5c3_Err = ErrorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -104,7 +114,7 @@ func Register() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"auth-layout\"><div class=\"auth-container\"><h5>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"auth-layout\" hx-boost=\"true\"><div class=\"auth-container\"><h5>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -113,7 +123,7 @@ func Register() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input class=\"primary-input\" type=\"text\" placeholder=\"Name\" name=\"name\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input required class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\"> <input required class=\"primary-input\" type=\"text\" placeholder=\"Name\" name=\"name\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -159,7 +169,7 @@ func UpdateUser(user models.User) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body><div class=\"default-layout\" hx-boost=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -176,7 +186,7 @@ func UpdateUser(user models.User) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h6></div><form class=\"primary-form\" hx-put=\"/profile\" hx-push-url=\"true\" hx-target=\"body\" hx-swap=\"outerHTML\"><input class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h6></div><form class=\"primary-form\" hx-put=\"/profile\" hx-push-url=\"true\" hx-target=\"body\" hx-swap=\"outerHTML\"><input required class=\"primary-input\" type=\"text\" placeholder=\"Username\" name=\"username\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -184,7 +194,7 @@ func UpdateUser(user models.User) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <input class=\"primary-input\" type=\"text\" placeholder=\"Name\" name=\"name\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <input required class=\"primary-input\" type=\"text\" placeholder=\"Name\" name=\"name\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -192,7 +202,7 @@ func UpdateUser(user models.User) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -238,7 +248,7 @@ func LoginAsGuest() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input class=\"primary-input\" placeholder=\"Please provide your name\" type=\"text\" name=\"name\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><form class=\"primary-form\" method=\"post\"><input required class=\"primary-input\" placeholder=\"Please provide your name\" type=\"text\" name=\"name\"> <button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

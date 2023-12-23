@@ -17,6 +17,7 @@ func Templates(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	templates, _ := models.FetchTemplatesByUser(user.Value)
+    templates = utils.Reverse[models.Template](templates)
 	return views.Templates(templates).Render(c.Request().Context(), c.Response().Writer)
 }
 

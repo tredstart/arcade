@@ -28,7 +28,7 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 								<div class="column-title">
 									<p>{ category }</p>
 								</div>
-								<input type="hidden" name="category" value={ category }/>
+								<input required type="hidden" name="category" value={ category }/>
 								// TODO: this is a text area
 								<textarea placeholder="Content" type="text" name="content"/>
 								<button class="primary-button">Post</button>
