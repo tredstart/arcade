@@ -6,7 +6,6 @@ import (
 	"arcade/internal/views"
 	"net/http"
 	"strings"
-	"unicode"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -29,19 +28,19 @@ func TemplatesNew(c echo.Context) error {
 	}
 	return views.CreateTemplateForm("").Render(c.Request().Context(), c.Response().Writer)
 }
-
 func TemplatesCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	c.Request().ParseForm()
-	data := strings.Join(c.Request().Form["categories"], ", ")
-    for _, category := range data {
-        if unicode.IsDigit(category) {
+    categories := c.Request().Form["categories"]
+    for _, category := range categories {
+        if utils.IsStringNumeric(category) {
 			return views.CreateTemplateForm("Categories cannot be entirely nubmers").Render(c.Request().Context(), c.Response().Writer)
 		}
     }
+	data := strings.Join(categories, ", ")
 	new_template := models.Template{}
 	new_template.Id = uuid.New()
 	new_template.User = uuid.MustParse(user.Value)

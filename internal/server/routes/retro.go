@@ -40,7 +40,7 @@ func RetroPage(c echo.Context) error {
 	for _, category := range categories {
 		context[category] = []models.Record{}
 
-		regex := regexp.MustCompile(`[^a-zA-Z0-9_\-]`)
+		regex := regexp.MustCompile(`[^a-zA-Z_\-]`)
 		c_ids[category] = regex.ReplaceAllString(category, "_")
 		if retro.Visible {
 			for _, record := range records {
@@ -98,6 +98,8 @@ func RetroCreate(c echo.Context) error {
 	if err != nil {
 		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
+    c.Request().ParseForm()
+    log.Println(c.Request().Form)
 	template_id := c.FormValue("template_id")
 	new_retro := models.Retro{}
 	new_retro.Id = uuid.New()

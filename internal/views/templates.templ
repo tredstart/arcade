@@ -1,6 +1,7 @@
 package views
 
 import "arcade/internal/models"
+import "fmt"
 
 script addInput() {
     const container = document.getElementById('inputsContainer');
@@ -18,30 +19,34 @@ templ NewTemplateForm() {
 	</div>
 }
 
+func getTemplateId(template models.Template) string {
+	return fmt.Sprintf(`{"template_id": "%s"}`, template.Id.String())
+}
+
 templ Templates(templates []models.Template) {
 	@head("Templates")
 	<body>
-		<div class="default-layout" hx-boost="true">
+		<div class="default-layout">
 			@aside()
-			<div class="default-container" hx-boost="true">
-                <div class="default-container-title">
-                    <h6>Templates</h6>
-                    @NewTemplateForm()
-                </div>
-                <div class="default-container-content">
-                    <div class="templates-list">
-                        for _, template := range templates {
-                        <div class="templates-list-item" hx-vals='{"template_id": + { template.Id.String() } + }' hx-post="/retro/new" hx-trigger="click">
-                            <div class="templates-list-item-content">
-                                <p>{ template.Categories }</p>
-                            </div>
-                            <div class="templates-list-item-message">
-                                <p><strong>Create retro from this template</strong></p>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </div>
+			<div class="default-container">
+				<div class="default-container-title">
+					<h6>Templates</h6>
+					@NewTemplateForm()
+				</div>
+				<div class="default-container-content">
+					<div class="templates-list">
+						for _, template := range templates {
+							<div class="templates-list-item" hx-target="body" hx-swap="outerHTML" hx-push-url="true" hx-vals={ getTemplateId(template) } hx-post="/retro/new" hx-trigger="click">
+								<div class="templates-list-item-content">
+									<p>{ template.Categories }</p>
+								</div>
+								<div class="templates-list-item-message">
+									<p><strong>Create retro from this template</strong></p>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
