@@ -22,6 +22,7 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 				<div class="default-container-title">
 					<h6>{ retro_title }</h6>
 				</div>
+				<div class="default-container-content">
 					for category := range records {
 						<div id={ c_ids[category] } class="column">
 							<form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
@@ -29,7 +30,6 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 									<p>{ category }</p>
 								</div>
 								<input required type="hidden" name="category" value={ category }/>
-								// TODO: this is a text area
 								<textarea placeholder="Content" type="text" name="content"/>
 								<button class="primary-button">Post</button>
 							</form>
@@ -38,6 +38,7 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 							}
 						</div>
 					}
+				</div>
 			</div>
 		</div>
 	</body>

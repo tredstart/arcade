@@ -34,7 +34,7 @@ func Login(c echo.Context) error {
 }
 
 func RegisterForm(c echo.Context) error {
-	return views.Register().Render(c.Request().Context(), c.Response().Writer)
+	return views.Register("").Render(c.Request().Context(), c.Response().Writer)
 }
 
 func Register(c echo.Context) error {
@@ -42,11 +42,11 @@ func Register(c echo.Context) error {
 	password := c.Request().FormValue("password")
 
 	if len(password) < 6 {
-		return views.ErrorBlock("Password cannot be less than 6 characters").Render(c.Request().Context(), c.Response().Writer)
+		return views.Register("Password cannot be less than 6 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 	if password != c.Request().FormValue("confirm") {
 		err := &utils.CustomError{S: "Passwords are not same"}
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return views.Register(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	user.Id = uuid.New()
 	user.Name = c.Request().FormValue("name")
