@@ -43,7 +43,7 @@ func Login(err string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if err != "" {
-			templ_7745c5c3_Err = ErrorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = errorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -117,7 +117,7 @@ func Register(err string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if err != "" {
-			templ_7745c5c3_Err = ErrorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = errorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -142,7 +142,7 @@ func Register(err string) templ.Component {
 	})
 }
 
-func UpdateUser(user models.User) templ.Component {
+func UpdateUser(user models.User, err string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -192,7 +192,17 @@ func UpdateUser(user models.User) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> <button class=\"primary-button\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Password\" name=\"password\"> <input required class=\"primary-input\" type=\"password\" placeholder=\"Confirm Password\" name=\"confirm\"> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if err != "" {
+			templ_7745c5c3_Err = errorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"primary-button\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

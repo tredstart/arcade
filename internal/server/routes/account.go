@@ -5,9 +5,11 @@ import (
 	"arcade/internal/utils"
 	"arcade/internal/views"
 	"net/http"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 )
 
 func LoginForm(c echo.Context) error {
@@ -23,7 +25,11 @@ func Login(c echo.Context) error {
 	p := c.Request().FormValue("password")
 	user, err := models.FetchUserByUsername(username)
 	if err != nil {
-		return views.Login(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		if strings.Contains(err.Error(), "no rows") {
+			return views.Login("No user found with this username").Render(c.Request().Context(), c.Response().Writer)
+		}
+        log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again.")
 	}
 	if !utils.CheckPasswordHash(p, user.Password) {
 		return views.Login("Wrong password").Render(c.Request().Context(), c.Response().Writer)
@@ -51,19 +57,21 @@ func Register(c echo.Context) error {
 	user.Id = uuid.New()
 	user.Name = c.Request().FormValue("name")
 	if len(user.Name) == 0 {
-		return views.ErrorBlock("Name cannot be empty").Render(c.Request().Context(), c.Response().Writer)
+		return views.Register("Name cannot be empty").Render(c.Request().Context(), c.Response().Writer)
 	}
 	user.Username = c.Request().FormValue("username")
 	if len(user.Username) < 3 {
-		return views.ErrorBlock("Username cannot be less than 4 characters").Render(c.Request().Context(), c.Response().Writer)
+		return views.Register("Username cannot be less than 3 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 	p, err := utils.HashPassword(password)
 	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	user.Password = p
 	if err := models.CreateUser(&user); err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
@@ -79,10 +87,11 @@ func UpdateUserForm(c echo.Context) error {
 
 	user, err := models.FetchUser(user_id.Value)
 	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
-	return views.UpdateUser(user).Render(c.Request().Context(), c.Response().Writer)
+	return views.UpdateUser(user, "").Render(c.Request().Context(), c.Response().Writer)
 }
 
 func UpdateUser(c echo.Context) error {
@@ -94,12 +103,13 @@ func UpdateUser(c echo.Context) error {
 
 	user, err := models.FetchUser(user_id.Value)
 	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	password := c.Request().FormValue("password")
 	if password != c.Request().FormValue("confirm") {
 		err := &utils.CustomError{S: "Passwords are not same"}
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+		return views.UpdateUser(user, err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 
 	// TODO: fix validation (move it to func)
@@ -107,11 +117,13 @@ func UpdateUser(c echo.Context) error {
 	user.Username = c.Request().FormValue("username")
 	p, err := utils.HashPassword(password)
 	if err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	user.Password = p
 	if err := models.UpdateUser(&user); err != nil {
-		return views.ErrorBlock(err.Error()).Render(c.Request().Context(), c.Response().Writer)
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
 	return c.Redirect(http.StatusSeeOther, "/templates")
@@ -123,10 +135,6 @@ func LoginAsGuestForm(c echo.Context) error {
 
 func LoginAsGuest(c echo.Context) error {
 	name := c.FormValue("name")
-
-	if len(name) == 0 {
-		return views.ErrorBlock("Name cannot be empty").Render(c.Request().Context(), c.Response().Writer)
-	}
 	next := c.QueryParams()["next"][0]
 	if next == "" {
 		next = "/"

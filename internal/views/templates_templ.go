@@ -193,7 +193,7 @@ func CreateTemplateForm(err string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if err != "" {
-			templ_7745c5c3_Err = ErrorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = errorBlock(err).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

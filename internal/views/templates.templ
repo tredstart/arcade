@@ -63,7 +63,7 @@ templ CreateTemplateForm(err string) {
 					<input required class="primary-input" placeholder="Category" name="categories" type="text"/>
 				</div>
 				if err != "" {
-					@ErrorBlock(err)
+					@errorBlock(err)
 				}
 				<button class="primary-button" onClick={ addInput() } type="button">Add category </button>
 				<button class="primary-button">Submit </button>

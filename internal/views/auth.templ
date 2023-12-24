@@ -11,9 +11,9 @@ templ Login(err string) {
 				<form class="primary-form" method="post">
 					<input required class="primary-input" type="text" placeholder="Username" name="username"/>
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
-                    if err != "" {
-                        @ErrorBlock(err)
-                    }
+					if err != "" {
+						@errorBlock(err)
+					}
 					<button class="primary-button">Login</button>
 				</form>
 				<a href="/register">Don't have an account? Create new!</a>
@@ -35,16 +35,16 @@ templ Register(err string) {
 					<input required class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
 					<button class="primary-button">Create account </button>
 				</form>
-                if err != "" {
-                    @ErrorBlock(err)
-                }
+				if err != "" {
+					@errorBlock(err)
+				}
 				<a href="/login">Aready have an account? Log in!</a>
 			</div>
 		</div>
 	</body>
 }
 
-templ UpdateUser(user models.User) {
+templ UpdateUser(user models.User, err string) {
 	@head("Modify user")
 	<body>
 		<div class="default-layout" hx-boost="true">
@@ -58,6 +58,9 @@ templ UpdateUser(user models.User) {
 					<input required class="primary-input" type="text" placeholder="Name" name="name" value={ user.Name }/>
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
 					<input required class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
+					if err != "" {
+						@errorBlock(err)
+					}
 					<button class="primary-button">Create account </button>
 				</form>
 			</div>
