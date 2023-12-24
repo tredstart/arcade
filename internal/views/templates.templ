@@ -39,7 +39,7 @@ templ Templates(templates []models.Template) {
 	</body>
 }
 
-templ CreateTemplateForm() {
+templ CreateTemplateForm(err string) {
 	@head("New template")
 	<body>
 		<div class="default-layout" hx-boost="true">
@@ -49,6 +49,9 @@ templ CreateTemplateForm() {
 				<div class="inputs-container" id="inputsContainer">
 					<input required class="primary-input" placeholder="Category" name="categories" type="text"/>
 				</div>
+				if err != "" {
+					@ErrorBlock(err)
+				}
 				<button class="primary-button" onClick={ addInput() } type="button">Add category </button>
 				<button class="primary-button">Submit </button>
 			</form>

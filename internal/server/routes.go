@@ -31,7 +31,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.POST("/retro/new", routes.RetroCreate)
 	e.GET("/templates", routes.Templates)
 	e.GET("/templates/new", routes.TemplatesNew)
-	e.POST("/templates/new", routes.TempalatesCreate)
+	e.POST("/templates/new", routes.TemplatesCreate)
 
 	return e
 }
