@@ -52,6 +52,18 @@ func CreateRetro(t *Retro) error {
 	return nil
 }
 
+func RetroSetVisibility(id string, visible bool) error {
+    if _, err := database.DB.Exec(
+        `UPDATE retro
+         SET visible = ?
+         WHERE id = ?`, 
+        id, visible,
+        ); err != nil {
+        return err
+    }
+    return nil
+}
+
 func DeleteRetro(id uuid.UUID) error {
 	if _, err := database.DB.Exec(
 		`DELETE retro WHERE id = ?`, id,
