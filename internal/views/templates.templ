@@ -14,7 +14,7 @@ script addInput() {
 
 templ NewTemplateForm() {
 	<div id="new-template-form">
-		<a href="/templates/new">New template</a>
+		<a class="primary-button create-template" href="/templates/new">New template</a>
 	</div>
 }
 
@@ -23,17 +23,25 @@ templ Templates(templates []models.Template) {
 	<body>
 		<div class="default-layout" hx-boost="true">
 			@aside()
-			<div class="default-container">
-				@NewTemplateForm()
-				<div id="templates-list">
-					for _, template := range templates {
-						<p>{ template.Categories }</p>
-						<form class="primary-form" method="post" action="/retro/new">
-							<input type="hidden" name="template_id" value={ template.Id.String() }/>
-							<button class="primary-button">Create retro from this template </button>
-						</form>
-					}
-				</div>
+			<div class="default-container" hx-boost="true">
+                <div class="default-container-title">
+                    <h6>Templates</h6>
+                    @NewTemplateForm()
+                </div>
+                <div class="default-container-content">
+                    <div class="templates-list">
+                        for _, template := range templates {
+                        <div class="templates-list-item" hx-vals='{"template_id": + { template.Id.String() } + }' hx-post="/retro/new" hx-trigger="click">
+                            <div class="templates-list-item-content">
+                                <p>{ template.Categories }</p>
+                            </div>
+                            <div class="templates-list-item-message">
+                                <p><strong>Create retro from this template</strong></p>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
 			</div>
 		</div>
 	</body>

@@ -1,11 +1,10 @@
 
 .column{
   width: 400px;
-  max-height: calc(100% - 120px);
-  overflow-y: auto;
-
+  height: 100%;
   display: inline-block;
   margin: 0 @elementSpace;
+  vertical-align:top;
 
   &:first-child{
     margin-left: 0;
@@ -15,17 +14,23 @@
     margin-right: 0;
   }
 
+  & .comments{
+    width: 100%;
+    max-height: calc(100% - 120px);
+    overflow-y: auto;
+  }
+
   &-title{
-    padding-bottom: 10px;
-    border-bottom: 1px solid #a4aeb9;
+    margin-bottom: 20px;
   }
 
   &-item{
     width: 100%;
     margin: @elementSpace 0;
-    background-color: #f9fafc;
+    background-color: white;
     border-radius: 5px;
     padding: @elementSpace;
+    border: 1px solid #dce5ec;
 
     &:first-child{
       margin-top: 0;
@@ -39,6 +44,7 @@
       width: 100%;
       min-height: 50px;
       position: relative;
+
 
       & p{
         white-space: break-spaces;

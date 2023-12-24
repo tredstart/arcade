@@ -13,6 +13,20 @@ templ RetroItem(content, author string) {
 	</div>
 }
 
+script autoresize(){
+    const tx = document.getElementsByTagName("textarea");
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+      tx[i].addEventListener("input", OnInput, false);
+    }
+
+    function OnInput(e) {
+      this.style.height = 0;
+      this.style.height = (this.scrollHeight) + "px";
+      e.preventDefault();
+    }
+}
+
 templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string) {
 	@head("Retro time")
 	<body>
@@ -22,24 +36,27 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 				<div class="default-container-title">
 					<h6>{ retro_title }</h6>
 				</div>
-				<div class="default-container-content">
+				<div class="column-container-content">
 					for category := range records {
-						<div id={ c_ids[category] } class="column">
-							<form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
-								<div class="column-title">
-									<p>{ category }</p>
-								</div>
-								<input required type="hidden" name="category" value={ category }/>
-								<textarea placeholder="Content" type="text" name="content"/>
-								<button class="primary-button">Post</button>
-							</form>
-							for _, record := range records[category] {
-								@RetroItem(record.Content, record.Author)
-							}
+						<div class="column">
+                            <div class="column-title">
+                                <p><strong>{ category }</strong></p>
+                            </div>
+							<div class="comments" id={ c_ids[category] }>
+                                <form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
+                                    <input required type="hidden" name="category" value={ category }/>
+                                    <textarea placeholder="Please enter to leave a comment" type="text" name="content"/>
+                                    <button class="primary-button">Post</button>
+                                </form>
+                                    for _, record := range records[category] {
+                                        @RetroItem(record.Content, record.Author)
+                                    }
+                            </div>
 						</div>
 					}
 				</div>
 			</div>
 		</div>
+        @autoresize()
 	</body>
 }
