@@ -19,8 +19,9 @@ templ HistoryPage(retros []models.Retro) {
 				<div class="default-container-title">
 					<h5>Retrospectives</h5>
 				</div>
-				<div class="history-list">
+
 					if len(retros) != 0 {
+					<div class="history-list">
 						for _, retro := range retros {
 							<li class="history-list-item">
 								<a href={ templ.URL("/retro/" + retro.Id.String()) }>
@@ -30,10 +31,13 @@ templ HistoryPage(retros []models.Retro) {
 								</a>
 							</li>
 						}
+					</div>
 					} else {
-						<a href="/templates">You don't have any retro yet, but you can create one here</a>
+					<div class="default-container-content">
+					    <a href="/templates">You don't have any retro yet, but you can create one here</a>
+					</div>
 					}
-				</div>
+
 			</div>
 		</div>
 	</body>
