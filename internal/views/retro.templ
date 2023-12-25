@@ -35,6 +35,9 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 			<div class="default-container">
 				<div class="default-container-title">
 					<h6>{ retro_title }</h6>
+
+					<button class="primary-button"><i class="fa fa-unlock"></i> Make visible</button>
+					<button class="primary-button"><i class="fa fa-lock"></i> Make private</button>
 				</div>
 				<div class="column-container-content">
 					for category := range records {
