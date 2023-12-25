@@ -5,12 +5,37 @@ import "fmt"
 
 script addInput() {
     const container = document.getElementById('inputsContainer');
-    const input = document.createElement('input');
-    input.name = 'categories';
-    input.placeholder = 'Category';
-    input.classList.add('primary-input');
-    input.required = true;
-    container.appendChild(input);
+    const wrapper = document.createElement('div');
+    wrapper.classList.add("input-row");
+    const input = createInput();
+    const deleteButton = createButton();
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(deleteButton);
+    container.appendChild(wrapper);
+
+    function createInput(){
+        const input = document.createElement('input');
+        input.name = 'categories';
+        input.placeholder = 'Category';
+        input.classList.add('primary-input');
+        input.required = true;
+
+        return input;
+    }
+
+    function createButton(){
+        const button = document.createElement('button');
+        button.innerText = 'Remove';
+        button.type = 'button';
+        button.classList.add('secondary-button');
+        button.addEventListener("click", (e) => {
+            e.target.parentNode.remove();
+            e.preventDefault()
+        })
+
+        return button;
+    }
 }
 
 templ NewTemplateForm() {
@@ -57,17 +82,23 @@ templ CreateTemplateForm(err string) {
 	<body>
 		<div class="default-layout" hx-boost="true">
 			@aside()
-			<form class="primary-form" method="post">
-				<h5>Create new template</h5>
-				<div class="inputs-container" id="inputsContainer">
-					<input required class="primary-input" placeholder="Category" name="categories" type="text"/>
-				</div>
-				if err != "" {
-					@errorBlock(err)
-				}
-				<button class="primary-button" onClick={ addInput() } type="button">Add category </button>
-				<button class="primary-button">Submit </button>
-			</form>
+			<div class="default-container">
+			    <div class="default-container-title">
+			        <h5>Create new template</h5>
+			    </div>
+                <div class="default-container-content">
+                    <form class="primary-form create-template-form small" method="post">
+                        <div class="inputs-container" id="inputsContainer">
+                            <input required class="primary-input" placeholder="Category" name="categories" type="text"/>
+                        </div>
+                        if err != "" {
+                            @errorBlock(err)
+                        }
+                        <button class="primary-button" onClick={ addInput() } type="button">Add category </button>
+                        <button class="primary-button">Submit</button>
+                    </form>
+                </div>
+			</div>
 		</div>
 	</body>
 }

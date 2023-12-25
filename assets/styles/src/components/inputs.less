@@ -42,3 +42,22 @@ textarea{
     pointer-events: none;
   }
 }
+
+.secondary-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 35px;
+  border-radius: 5px;
+  background: @greyColor;
+  color: @whiteColor;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  .default-transition;
+
+  &:hover{
+    background: @darkColor;
+  }
+}

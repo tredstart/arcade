@@ -53,7 +53,7 @@ templ UpdateUser(user models.User, err string) {
 				<div class="default-container-title">
 					<h6>Wanna change your user data?</h6>
 				</div>
-				<form class="primary-form" hx-put="/profile" hx-push-url="true" hx-target="body" hx-swap="outerHTML">
+				<form class="primary-form small" hx-put="/profile" hx-push-url="true" hx-target="body" hx-swap="outerHTML">
 					<input required class="primary-input" type="text" placeholder="Username" name="username" value={ user.Username }/>
 					<input required class="primary-input" type="text" placeholder="Name" name="name" value={ user.Name }/>
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
@@ -61,7 +61,7 @@ templ UpdateUser(user models.User, err string) {
 					if err != "" {
 						@errorBlock(err)
 					}
-					<button class="primary-button">Create account </button>
+					<button class="primary-button">Update account</button>
 				</form>
 			</div>
 		</div>
