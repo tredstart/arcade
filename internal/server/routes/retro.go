@@ -66,17 +66,17 @@ func RetroPage(c echo.Context) error {
 	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created), retro, authorized).Render(c.Request().Context(), c.Response().Writer)
 }
 
+func RecordLike(c echo.Context) error {
+    return nil
+}
+
 func RetroMakeVisible(c echo.Context) error {
 	if _, err := utils.ReadCookie(c, "user"); err != nil {
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	retro_id := c.Param("id")
-    log.Warn(retro_id)
-
 	visible := c.FormValue("visible")
-    log.Warn(visible)
 	visibility := !(visible == "true")
-    log.Warn(visibility)
 
 	if err := models.RetroSetVisibility(retro_id, visibility); err != nil {
 		log.Error(err.Error())
@@ -105,7 +105,7 @@ func RetroItemCreate(c echo.Context) error {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
-	return views.RetroItem(record.Content, record.Author).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroItem(record).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroCreate(c echo.Context) error {

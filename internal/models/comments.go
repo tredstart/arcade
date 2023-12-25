@@ -23,6 +23,14 @@ func FetchComment(id uuid.UUID) (Comment, error) {
 	return comment, nil
 }
 
+func CountComments(retro_id string) (int, error) {
+    var count int = 0 
+    if err := database.DB.Get(&count, `SELECT COUNT(id) FROM comment WHERE id = ?`, retro_id); err != nil {
+        return count, err
+    }
+    return count, nil
+}
+
 func FetchCommentsByRecord(id string) ([]Comment, error) {
 	var comments []Comment
 	if err := database.DB.Select(&comments, `SELECT * FROM comment WHERE record = ?`, id); err != nil {

@@ -34,6 +34,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.POST("/templates/new", routes.TemplatesCreate)
 
     e.POST("/retro/:id/change-visibility", routes.RetroMakeVisible)
+    e.PATCH("/record/:id", routes.RecordLike)
+    e.GET("/record/:id/comments", routes.CommentsView)
+    e.POST("/record/:id/comments", routes.CommentsAdd)
+    e.PATCH("record/:id/comments", routes.CommentLike)
+    e.GET("/count-comments/:retro-id", routes.CommentsCount)
 
 	return e
 }

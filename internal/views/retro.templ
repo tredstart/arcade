@@ -3,45 +3,34 @@ package views
 import "arcade/internal/models"
 import "fmt"
 
-templ RetroItem(content, author string) {
-	<div class="column-item">
+func getCommentURL(id string) string {
+	return fmt.Sprintf("/record/%s/comments", id)
+}
+
+func getCommentCountURL(id string) string {
+    return fmt.Sprintf("/count-comments/%s", id)
+}
+
+templ RetroItem(record models.Record) {
+	<div class="column-item" id="comments-block">
 		<div class="column-item-content">
-			<p>{ content }</p>
+			<p>{ record.Content }</p>
 		</div>
 		<div class="column-item-title">
-			<p>{ author }</p>
+			<p>{ record.Author }</p>
 			<div class="column-item-title-reactions">
-			    // ACTION HERE
-			    <div class="likes">
-			        <i class="fa fa-thumbs-up active"></i> <p>2</p>
-			    </div>
-			    // ACTION HERE
-                <div>
-                    <i class="fa fa-comment"></i> <p>1</p>
-                </div>
-            </div>
+				// ACTION HERE
+				<div class="likes">
+					<i class="fa fa-thumbs-up active"></i>
+					<p>{ fmt.Sprint(record.Likes) } </p>
+				</div>
+				// ACTION HERE
+				<div>
+					<i class="fa fa-comment" hx-get={ getCommentURL(record.Id.String()) } hx-trigger="click" hx-target="#comments-block" hx-swap="beforeend" ></i>
+					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load"></p>
+				</div>
+			</div>
 		</div>
-        <div class="column-item-reaction-comments">
-            <form>
-                <p><strong>Leave a comment:</strong></p>
-                <textarea required placeholder="Your comment here" />
-                <button class="secondary-button">Comment</button>
-            </form>
-            <p><strong>Comments:</strong></p>
-            <div class="column-item-reaction-comments-list">
-                <div class="column-item-reaction-comments-list-item">
-                    <div class="content">
-                        <p><strong>Nodari dezz nuts</strong> commented:</p>
-                        <p>Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups</p>
-                    </div>
-                    // ACTION HERE
-                    <div class="likes">
-                        <i class="fa fa-thumbs-up likes active"></i> <p>2</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
 	</div>
 }
 
@@ -60,7 +49,7 @@ script autoresize() {
 }
 
 func getVisibilityLink(retro_id string) string {
-    return fmt.Sprintf("/retro/%s/change-visibility", retro_id)
+	return fmt.Sprintf("/retro/%s/change-visibility", retro_id)
 }
 
 templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string, retro models.Retro, authorized bool) {
@@ -74,11 +63,11 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 					if authorized {
 						if retro.Visible {
 							<button class="primary-button" hx-vals='{"visible": "true"}' hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
-							    <i class="fa fa-lock"></i> Make private
+								<i class="fa fa-lock"></i> Make private
 							</button>
 						} else {
 							<button class="primary-button" hx-vals='{"visible": "false"}' hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
-							    <i class="fa fa-unlock"></i> Make visible
+								<i class="fa fa-unlock"></i> Make visible
 							</button>
 						}
 					}
@@ -96,7 +85,7 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 									<button class="primary-button">Post</button>
 								</form>
 								for _, record := range records[category] {
-									@RetroItem(record.Content, record.Author)
+									@RetroItem(record)
 								}
 							</div>
 						</div>

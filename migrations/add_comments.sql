@@ -4,7 +4,7 @@ alter table record
 alter table retro
     add column visible integer default 0;
 
-create table if not exists comments (
+create table if not exists comment (
     id text primary key,
     record text not null,
     author text not null,
