@@ -4,8 +4,8 @@ import "arcade/internal/models"
 import "fmt"
 
 templ CommentsBlock(comments []models.Comment, record_id string) {
-	<div id="comments-list" class="column-item-reaction-comments">
-		<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target="#comments-list">
+	<div id={ fmt.Sprintf("comments-list-%s", record_id) } class="column-item-reaction-comments">
+		<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }>
 			<p><strong>Leave a comment:</strong></p>
 			<textarea required placeholder="Your comment here" name="content"></textarea>
 			<button class="secondary-button">Comment</button>

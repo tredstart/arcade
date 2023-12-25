@@ -18,7 +18,7 @@ func CommentsView(c echo.Context) error {
         return c.Redirect(http.StatusSeeOther, "/login")
 	}
 
-    record_id := c.Param("id")
+    record_id := c.Param("record_id")
     comments, _ := models.FetchCommentsByRecord(record_id)
     return views.CommentsBlock(comments, record_id).Render(c.Request().Context(), c.Response().Writer)
 }
@@ -48,7 +48,7 @@ func CommentsAdd(c echo.Context) error {
     comment.Id = uuid.New()
     comment.Author = name.Value
     comment.Content = c.FormValue("content")
-    record_id := c.Param("id")
+    record_id := c.Param("record_id")
     comment.Record = uuid.MustParse(record_id)
     if err = models.CreateComment(&comment); err != nil {
         log.Error(err.Error())
