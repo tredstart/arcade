@@ -36,9 +36,30 @@
       align-items: center;
       gap: @elementSpace;
 
+      & .navigation-link{
+        cursor: pointer;
+      }
+
       & li{
         &:last-child{
           margin-top: auto;
+
+          & a{
+            color: @darkColor;
+          }
+        }
+
+        & a{
+          color: @greyColor;
+          .default-transition;
+
+          &.active{
+            color: @darkColor;
+          }
+
+          &:hover{
+            color: @darkColor;
+          }
         }
       }
     }

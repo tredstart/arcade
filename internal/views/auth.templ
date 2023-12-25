@@ -15,8 +15,8 @@ templ Login(err string) {
 						@errorBlock(err)
 					}
 					<button class="primary-button">Login</button>
+					<a href="/register">Don't have an account? Create new!</a>
 				</form>
-				<a href="/register">Don't have an account? Create new!</a>
 			</div>
 		</div>
 	</body>
@@ -34,11 +34,11 @@ templ Register(err string) {
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
 					<input required class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
 					<button class="primary-button">Create account </button>
+				    <a href="/login">Aready have an account? Log in!</a>
 				</form>
 				if err != "" {
 					@errorBlock(err)
 				}
-				<a href="/login">Aready have an account? Log in!</a>
 			</div>
 		</div>
 	</body>
@@ -76,7 +76,7 @@ templ LoginAsGuest() {
 				<h5>Retro Board</h5>
 				<form class="primary-form" method="post">
 					<input required class="primary-input" placeholder="Please provide your name" type="text" name="name"/>
-					<button class="primary-button">Create account </button>
+					<button class="primary-button">Login as guest</button>
 				</form>
 			</div>
 		</div>

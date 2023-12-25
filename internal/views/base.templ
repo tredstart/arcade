@@ -12,18 +12,35 @@ templ head(title string) {
 	</head>
 }
 
+script configureNavigation(){
+    const links = document.querySelectorAll('.navigation-link');
+    links.forEach(link => {
+        if(window.location.href === link.href){
+            link.classList.add("active")
+        }
+    })
+}
+
+script logout(){
+    document.cookie.split(";").forEach(function(c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    window.location.reload();
+}
+
 templ aside(){
-        
       <aside class="sidebar">
           <div class="sidebar-title">
               <img src="/static/images/buga-vuga-logo.png" alt="Arcade" />
           </div>
           <div class="sidebar-content">
               <ul class="sidebar-content-menu">
-                  <li><a href="/templates">Templates</a></li>
-                  <li><a href="/history">Retrospectives</a></li>
-                  <li><a href="/profile"><i class="fa fa-user"></i></a></li>
+                  <li><a class="navigation-link" href="/templates">Templates</a></li>
+                  <li><a class="navigation-link" href="/history">Retrospectives</a></li>
+                  <li><a class="navigation-link" href="/profile">Account</a></li>
+                  <li><a class="navigation-link" onClick={ logout() }>Logout</a></li>
               </ul>
           </div>
+          @configureNavigation()
       </aside>
 }
