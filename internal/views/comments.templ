@@ -4,7 +4,7 @@ import "arcade/internal/models"
 import "fmt"
 
 templ CommentsBlock(comments []models.Comment, record_id string) {
-	<div class="column-item-reaction-comments">
+	<div id="comments-list" class="column-item-reaction-comments">
 		<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target="#comments-list">
 			<p><strong>Leave a comment:</strong></p>
 			<textarea required placeholder="Your comment here" name="content"></textarea>
@@ -12,7 +12,7 @@ templ CommentsBlock(comments []models.Comment, record_id string) {
 		</form>
 		<p><strong>Comments:</strong></p>
 		for _, comment := range comments {
-			<div id="comments-list" class="column-item-reaction-comments-list">
+			<div class="column-item-reaction-comments-list">
 				@Comment(comment)
 			</div>
 		}
