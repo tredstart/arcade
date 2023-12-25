@@ -12,7 +12,7 @@ func getCommentCountURL(id string) string {
 }
 
 templ RetroItem(record models.Record) {
-	<div class="column-item" id={ fmt.Sprintf("comments-block-%s", record.Id.String()) }>
+	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) } >
 		<div class="column-item-content">
 			<p>{ record.Content }</p>
 		</div>
@@ -26,7 +26,7 @@ templ RetroItem(record models.Record) {
 				</div>
 				// ACTION HERE
 				<div>
-					<i class="fa fa-comment" hx-get={ getCommentURL(record.Id.String()) } hx-trigger="click" hx-target={ fmt.Sprintf("#comments-block-%s", record.Id.String()) } hx-swap="beforeend" ></i>
+					<i class="fa fa-comment" hx-get={ getCommentURL(record.Id.String()) } hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) } hx-swap="outerHTML" ></i>
 					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load"></p>
 				</div>
 			</div>
