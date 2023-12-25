@@ -21,7 +21,7 @@ func FetchUser(id string) (User, error) {
 }
 
 func FetchUserByUsername(username string) (User, error) {
-    var user User
+	var user User
 	if err := database.DB.Get(&user, `SELECT * FROM user WHERE username = ?`, username); err != nil {
 		return User{}, err
 	}
@@ -50,19 +50,19 @@ func CreateUser(t *User) error {
 }
 
 func UpdateUser(t *User) error {
-    if _, err := database.DB.Exec(
-        `UPDATE user
+	if _, err := database.DB.Exec(
+		`UPDATE user
          SET name = ?, username = ?, password = ? 
          WHERE id = ?`,
-        t.Name,
-        t.Username,
-        t.Password,
-        t.Id,
-        ); err != nil {
-        return err
-    }
+		t.Name,
+		t.Username,
+		t.Password,
+		t.Id,
+	); err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
 
 func DeleteUser(id uuid.UUID) error {

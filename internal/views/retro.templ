@@ -1,6 +1,7 @@
 package views
 
 import "arcade/internal/models"
+import "fmt"
 
 templ RetroItem(content, author string) {
 	<div class="column-item">
@@ -13,7 +14,7 @@ templ RetroItem(content, author string) {
 	</div>
 }
 
-script autoresize(){
+script autoresize() {
     const tx = document.getElementsByTagName("textarea");
     for (let i = 0; i < tx.length; i++) {
       tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
@@ -27,7 +28,11 @@ script autoresize(){
     }
 }
 
-templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string) {
+func getVisibilityLink(retro_id string) string {
+    return fmt.Sprintf("/retro/%s/change-visibility", retro_id)
+}
+
+templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string, retro models.Retro, authorized bool) {
 	@head("Retro time")
 	<body>
 		<div class="default-layout">
@@ -35,31 +40,35 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 			<div class="default-container">
 				<div class="default-container-title">
 					<h6>{ retro_title }</h6>
-
-					<button class="primary-button"><i class="fa fa-unlock"></i> Make visible</button>
-					<button class="primary-button"><i class="fa fa-lock"></i> Make private</button>
+					if authorized {
+						if retro.Visible {
+							<button class="primary-button" hx-vals='{"visible": "true"}' hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body"><i class="fa fa-lock"></i> Make private</button>
+						} else {
+							<button class="primary-button" hx-vals='{"visible": "false"}' hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body"><i class="fa fa-unlock"></i> Make visible</button>
+						}
+					}
 				</div>
 				<div class="column-container-content">
 					for category := range records {
 						<div class="column">
-                            <div class="column-title">
-                                <p><strong>{ category }</strong></p>
-                            </div>
+							<div class="column-title">
+								<p><strong>{ category }</strong></p>
+							</div>
 							<div class="comments" id={ c_ids[category] }>
-                                <form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
-                                    <input required type="hidden" name="category" value={ category }/>
-                                    <textarea placeholder="Please enter to leave a comment" type="text" name="content"/>
-                                    <button class="primary-button">Post</button>
-                                </form>
-                                    for _, record := range records[category] {
-                                        @RetroItem(record.Content, record.Author)
-                                    }
-                            </div>
+								<form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
+									<input required type="hidden" name="category" value={ category }/>
+									<textarea placeholder="Please enter to leave a comment" type="text" name="content"></textarea>
+									<button class="primary-button">Post</button>
+								</form>
+								for _, record := range records[category] {
+									@RetroItem(record.Content, record.Author)
+								}
+							</div>
 						</div>
 					}
 				</div>
 			</div>
 		</div>
-        @autoresize()
+		@autoresize()
 	</body>
 }

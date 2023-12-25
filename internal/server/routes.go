@@ -33,6 +33,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.GET("/templates/new", routes.TemplatesNew)
 	e.POST("/templates/new", routes.TemplatesCreate)
 
+    e.POST("/retro/:id/change-visibility", routes.RetroMakeVisible)
+
 	return e
 }
 

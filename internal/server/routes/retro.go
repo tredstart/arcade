@@ -18,21 +18,21 @@ func RetroPage(c echo.Context) error {
 
 	retro_id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	if _, err := utils.ReadCookie(c, "name"); err != nil {
 		return c.Redirect(http.StatusSeeOther, "/guest?next=/retro/"+retro_id.String())
 	}
 	retro, err := models.FetchRetro(retro_id)
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	template, err := models.FetchTemplate(retro.Template)
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
 	records, _ := models.FetchRecordsByRetro(retro_id)
@@ -53,23 +53,37 @@ func RetroPage(c echo.Context) error {
 			}
 		}
 	}
-	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created)).Render(c.Request().Context(), c.Response().Writer)
+
+	user_id, err := utils.ReadCookie(c, "user")
+	authorized := false
+
+	if err == nil {
+		if u, e := models.FetchUser(user_id.Value); e == nil && u.Id == retro.User {
+			authorized = true
+		}
+	}
+
+	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created), retro, authorized).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroMakeVisible(c echo.Context) error {
 	if _, err := utils.ReadCookie(c, "user"); err != nil {
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
-	retro_id, err := uuid.Parse(c.Param("id"))
-	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
-	}
+	retro_id := c.Param("id")
+    log.Warn(retro_id)
 
 	visible := c.FormValue("visible")
-	_ = !(visible == "true")
+    log.Warn(visible)
+	visibility := !(visible == "true")
+    log.Warn(visibility)
 
-	return c.Redirect(http.StatusSeeOther, "/retro/"+retro_id.String())
+	if err := models.RetroSetVisibility(retro_id, visibility); err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	return c.Redirect(http.StatusSeeOther, "/retro/"+retro_id)
 }
 
 func RetroItemCreate(c echo.Context) error {
@@ -97,8 +111,8 @@ func RetroItemCreate(c echo.Context) error {
 func RetroCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	c.Request().ParseForm()
 	log.Error(c.Request().Form)
@@ -110,8 +124,8 @@ func RetroCreate(c echo.Context) error {
 	new_retro.Created = time.Now().Format("2006-01-02")
 	new_retro.Visible = false
 	if err := models.CreateRetro(&new_retro); err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	return c.Redirect(http.StatusSeeOther, "/retro/"+new_retro.Id.String())
 }
