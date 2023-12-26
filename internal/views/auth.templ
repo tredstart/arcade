@@ -1,36 +1,68 @@
 package views
 
-templ Login() {
+import "arcade/internal/models"
+
+templ Login(err string) {
 	@head("Login")
 	<body>
-		<div class="auth-layout">
+		<div class="auth-layout" hx-boost="true">
 			<div class="auth-container">
 				<h5>Retro Board</h5>
-				<form method="post">
-					<input class="primary-input" type="text" placeholder="Username" name="username"/>
-					<input class="primary-input" type="password" placeholder="Password" name="password"/>
+				<form class="primary-form" method="post">
+					<input required class="primary-input" type="text" placeholder="Username" name="username"/>
+					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
+					if err != "" {
+						@errorBlock(err)
+					}
 					<button class="primary-button">Login</button>
+					<a href="/register">Don't have an account? Create new!</a>
 				</form>
-				<a href="/register">Don't have an account? Create new!</a>
 			</div>
 		</div>
 	</body>
 }
 
-templ Register() {
+templ Register(err string) {
 	@head("Register")
 	<body>
-		<div class="auth-layout">
+		<div class="auth-layout" hx-boost="true">
 			<div class="auth-container">
 				<h5>Retro Board</h5>
-				<form method="post">
-					<input class="primary-input" type="text" placeholder="Username" name="username"/>
-					<input class="primary-input" type="text" placeholder="Name" name="name"/>
-					<input class="primary-input" type="password" placeholder="Password" name="password"/>
-					<input class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
+				<form class="primary-form" method="post">
+					<input required class="primary-input" type="text" placeholder="Username" name="username"/>
+					<input required class="primary-input" type="text" placeholder="Name" name="name"/>
+					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
+					<input required class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
 					<button class="primary-button">Create account </button>
+				    <a href="/login">Aready have an account? Log in!</a>
 				</form>
-				<a href="/login">Aready have an account? Log in!</a>
+				if err != "" {
+					@errorBlock(err)
+				}
+			</div>
+		</div>
+	</body>
+}
+
+templ UpdateUser(user models.User, err string) {
+	@head("Modify user")
+	<body>
+		<div class="default-layout" hx-boost="true">
+			@aside()
+			<div class="default-container">
+				<div class="default-container-title">
+					<h6>Wanna change your user data?</h6>
+				</div>
+				<form class="primary-form small" hx-put="/profile" hx-push-url="true" hx-target="body" hx-swap="outerHTML">
+					<input required class="primary-input" type="text" placeholder="Username" name="username" value={ user.Username }/>
+					<input required class="primary-input" type="text" placeholder="Name" name="name" value={ user.Name }/>
+					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
+					<input required class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
+					if err != "" {
+						@errorBlock(err)
+					}
+					<button class="primary-button">Update account</button>
+				</form>
 			</div>
 		</div>
 	</body>
@@ -42,9 +74,10 @@ templ LoginAsGuest() {
 		<div class="auth-layout">
 			<div class="auth-container">
 				<h5>Retro Board</h5>
-				<form method="post">
-					<input class="primary-input" placeholder="Please provide your name" type="text" name="name"/>
-					<button class="primary-button">Create account </button>
+				<form class="primary-form" method="post">
+					<input required class="primary-input" placeholder="Please provide your name" type="text" name="name"/>
+					<button class="primary-button">Login as guest</button>
+				    <a href="/login">Aready have an account? Log in!</a>
 				</form>
 			</div>
 		</div>

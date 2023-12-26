@@ -18,11 +18,9 @@ Congrats! Now you just share the link, and anybody can leave a comment under a c
 
 ## Stuff to improve in near future in no particular order
 - [ ] Add more tests  
-- [ ] Improve error handling  
-- [ ] Provide user profile
-- [ ] Add ability to use global templates 
-- [ ] (Optional) Add more of that sweet htmx for better experience 
-- [ ] Improve sql queries
+- [x] Improve error handling  
+- [x] Provide user profile
+- [x] (Optional) Add more of that sweet htmx for better experience 
 
 ## Credits  
   

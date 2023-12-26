@@ -11,6 +11,7 @@ type Retro struct {
 	User     uuid.UUID
 	Created  string
 	Template uuid.UUID
+	Visible  bool
 }
 
 func FetchRetro(id uuid.UUID) (Retro, error) {
@@ -39,22 +40,27 @@ func FetchRetrosByUser(user_id string) ([]Retro, error) {
 
 func CreateRetro(t *Retro) error {
 	if _, err := database.DB.Exec(
-		`INSERT INTO retro VALUES (?, ?, ?, ?)`,
+		`INSERT INTO retro VALUES (?, ?, ?, ?, ?)`,
 		t.Id,
 		t.User,
 		t.Created,
 		t.Template,
+		t.Visible,
 	); err != nil {
 		return err
 	}
 	return nil
 }
 
-func DeleteRetro(id uuid.UUID) error {
+func RetroSetVisibility(id string, visible bool) error {
 	if _, err := database.DB.Exec(
-		`DELETE retro WHERE id = ?`, id,
+		`UPDATE retro
+         SET visible = ?
+         WHERE id = ?`,
+		visible, id,
 	); err != nil {
-		return nil
+		return err
 	}
 	return nil
 }
+

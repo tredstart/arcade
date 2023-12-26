@@ -1,12 +1,13 @@
 module arcade
 
-go 1.21.4
+go 1.21
 
 require (
-	github.com/a-h/templ v0.2.476
+	github.com/a-h/templ v0.2.501
 	github.com/google/uuid v1.4.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.3
+	github.com/labstack/gommon v0.4.1
 	github.com/libsql/libsql-client-go v0.0.0-20231128153229-cb5832f4404f
 	github.com/mattn/go-sqlite3 v1.14.6
 	github.com/stretchr/testify v1.8.4
@@ -18,7 +19,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/klauspost/compress v1.15.15 // indirect
-	github.com/labstack/gommon v0.4.1 // indirect
 	github.com/libsql/sqlite-antlr4-parser v0.0.0-20230802215326-5cb5bb604475 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

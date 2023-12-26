@@ -1,11 +1,10 @@
 
 .column{
   width: 400px;
-  max-height: 85%;
-  overflow-y: auto;
-
+  height: 100%;
   display: inline-block;
   margin: 0 @elementSpace;
+  vertical-align:top;
 
   &:first-child{
     margin-left: 0;
@@ -15,17 +14,24 @@
     margin-right: 0;
   }
 
+  & .comments{
+    width: 100%;
+    max-height: calc(100% - 120px);
+    overflow-y: auto;
+  }
+
   &-title{
-    padding-bottom: 10px;
-    border-bottom: 1px solid #a4aeb9;
+    margin-bottom: 20px;
   }
 
   &-item{
     width: 100%;
     margin: @elementSpace 0;
-    background-color: #f9fafc;
+    background-color: white;
     border-radius: 5px;
     padding: @elementSpace;
+    padding: @elementSpace;
+    border: 1px solid #dce5ec;
 
     &:first-child{
       margin-top: 0;
@@ -40,6 +46,7 @@
       min-height: 50px;
       position: relative;
 
+
       & p{
         white-space: break-spaces;
         display: block;
@@ -51,7 +58,132 @@
       width: 100%;
       margin-top: 30px;
       padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-top: 1px solid #a4aeb9;
+
+      &-reactions{
+        display: flex;
+        align-items: center;
+        gap: @elementSpace;
+
+        & *{
+          cursor: pointer;
+          font-size: @p-size;
+          .default-transition;
+        }
+
+        & > div{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 5px;
+        }
+
+        & .likes{
+          & i{
+            .less-opacity;
+
+            &.active{
+              color: @blueColor;
+              .normal-opacity;
+            }
+          }
+        }
+      }
+    }
+
+    &-reaction-comments{
+      width: 100%;
+      margin-top: @elementSpace;
+
+      &-actions{
+        width: 100%;
+
+        & .close-icon{
+          display: block;
+          width: 25px;
+          height: 25px;
+          position: relative;
+          cursor: pointer;
+          margin-left: auto;
+
+          &::before{
+            .default-cross-line();
+            background: @darkColor;
+            transform: rotate(45deg);
+          }
+
+          &::after{
+            .default-cross-line();
+            background: @darkColor;
+            transform: rotate(-45deg);
+          }
+        }
+      }
+
+      & form{
+        margin: @elementSpace 0;
+
+        & textarea{
+          width: 85%;
+          margin-top: 5px;
+          margin-bottom: @elementSpace;
+        }
+      }
+
+      &-list{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: @defaultSpace;
+
+        &-item{
+          max-width: 85%;
+          width: 85%;
+          white-space: break-spaces;
+          display: flex;
+          gap: @elementSpace;
+          align-items: center;
+          justify-content: space-between;
+
+          &:first-child{
+            margin-top: @elementSpace;
+          }
+
+          & .content{
+            width: 85%;
+            padding: 5px 5px 5px 0;
+            border-right: 1px solid @greyColor;
+
+            & p{
+              &:first-child{
+                margin-bottom: 5px;
+              }
+            }
+          }
+
+          & .likes{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+
+            & i{
+              font-size: @h6-size;
+              .less-opacity;
+
+              &.active{
+                color: @blueColor;
+                .normal-opacity;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

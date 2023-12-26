@@ -10,7 +10,24 @@
   outline: none;
 }
 
+textarea{
+    width: 100%;
+    height: 65px;
+    min-height: 65px;
+    max-height: 150px;
+    padding: 15px;
+    resize: none;
+    display: block;
+    border: 1px solid @darkColor;
+    border-radius: 5px;
+    outline: none;
+}
+
 .primary-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: @elementSpace;
   width: 150px;
   height: 35px;
   border-radius: 5px;
@@ -25,4 +42,27 @@
     cursor: none;
     pointer-events: none;
   }
+}
+
+.secondary-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 35px;
+  border-radius: 5px;
+  background: @greyColor;
+  color: @whiteColor;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  .default-transition;
+
+  &:hover{
+    background: @darkColor;
+  }
+}
+
+.error-message{
+  color: red;
 }

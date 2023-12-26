@@ -1,20 +1,51 @@
 package views
 
 import "arcade/internal/models"
+import "fmt"
 
 script addInput() {
-    var container = document.getElementById('inputsContainer');
-    var input = document.createElement('input');
-    input.name = 'categories';
-    input.placeholder = 'Category';
-    input.classList.add('primary-input');
-    container.appendChild(input);
+    const container = document.getElementById('inputsContainer');
+    const wrapper = document.createElement('div');
+    wrapper.classList.add("input-row");
+    const input = createInput();
+    const deleteButton = createButton();
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(deleteButton);
+    container.appendChild(wrapper);
+
+    function createInput(){
+        const input = document.createElement('input');
+        input.name = 'categories';
+        input.placeholder = 'Category';
+        input.classList.add('primary-input');
+        input.required = true;
+
+        return input;
+    }
+
+    function createButton(){
+        const button = document.createElement('button');
+        button.innerText = 'Remove';
+        button.type = 'button';
+        button.classList.add('secondary-button');
+        button.addEventListener("click", (e) => {
+            e.target.parentNode.remove();
+            e.preventDefault()
+        })
+
+        return button;
+    }
 }
 
 templ NewTemplateForm() {
 	<div id="new-template-form">
-		<button class="primary-button" hx-get="/templates/new" hx-swap="outerHTML" hx-target="#new-template-form">New template</button>
+		<a class="primary-button create-template" href="/templates/new">New template</a>
 	</div>
+}
+
+func getTemplateId(template models.Template) string {
+	return fmt.Sprintf(`{"template_id": "%s"}`, template.Id.String())
 }
 
 templ Templates(templates []models.Template) {
@@ -23,28 +54,51 @@ templ Templates(templates []models.Template) {
 		<div class="default-layout">
 			@aside()
 			<div class="default-container">
-				@NewTemplateForm()
-				<div id="templates-list" hx-target="body" hx-swap="outerHTML" hx-get="/templates" hx-trigger="newTemplate from:body">
-					for _, template := range templates {
-						<p>{ template.Categories }</p>
-						<form method="post" action="/retro/new">
-							<input type="hidden" name="template_id" value={ template.Id.String() }/>
-							<button class="primary-button">Create retro from this template </button>
-						</form>
-					}
+				<div class="default-container-title">
+					<h6>Templates</h6>
+					@NewTemplateForm()
+				</div>
+				<div class="default-container-content">
+					<div class="templates-list">
+						for _, template := range templates {
+							<div class="templates-list-item" hx-target="body" hx-swap="outerHTML" hx-push-url="true" hx-vals={ getTemplateId(template) } hx-post="/retro/new" hx-trigger="click">
+								<div class="templates-list-item-content">
+									<p>{ template.Categories }</p>
+								</div>
+								<div class="templates-list-item-message">
+									<p><strong>Create retro from this template</strong></p>
+								</div>
+							</div>
+						}
+					</div>
 				</div>
 			</div>
 		</div>
 	</body>
 }
 
-templ CreateTemplateForm() {
-	<form hx-post="/templates/new" hx-swap="outerHTML">
-		<h5>Create new template</h5>
-		<div id="inputsContainer">
-			<input class="primary-input" placeholder="Category" name="categories" type="text"/>
+templ CreateTemplateForm(err string) {
+	@head("New template")
+	<body>
+		<div class="default-layout" hx-boost="true">
+			@aside()
+			<div class="default-container">
+			    <div class="default-container-title">
+			        <h5>Create new template</h5>
+			    </div>
+                <div class="default-container-content">
+                    <form class="primary-form create-template-form small" method="post">
+                        <div class="inputs-container" id="inputsContainer">
+                            <input required class="primary-input" placeholder="Category" name="categories" type="text"/>
+                        </div>
+                        if err != "" {
+                            @errorBlock(err)
+                        }
+                        <button class="primary-button" onClick={ addInput() } type="button">Add category </button>
+                        <button class="primary-button">Submit</button>
+                    </form>
+                </div>
+			</div>
 		</div>
-		<input type="button" class="primary-button" onclick={ addInput() } value="Add category"/>
-		<button class="primary-button">Submit </button>
-	</form>
+	</body>
 }

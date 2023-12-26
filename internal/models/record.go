@@ -13,9 +13,10 @@ type Record struct {
 	Author   string
 	Category string
 	Content  string
+    Likes int
 }
 
-func FetchRecord(id uuid.UUID) (Record, error) {
+func FetchRecord(id string) (Record, error) {
 	var record Record
 	if err := database.DB.Get(&record, `SELECT * FROM record WHERE id = ?`, id); err != nil {
 		return Record{}, err
@@ -34,12 +35,34 @@ func FetchRecordsByRetro(retro_id uuid.UUID) ([]Record, error) {
 
 func CreateRecord(t *Record) error {
 	if _, err := database.DB.Exec(
-		`INSERT INTO record VALUES (?, ?, ?, ?, ?)`,
+		`INSERT INTO record VALUES (?, ?, ?, ?, ?, ?)`,
 		t.Id,
 		t.Retro,
 		t.Author,
 		t.Category,
 		t.Content,
+        t.Likes,
+	); err != nil {
+		return err
+	}
+	return nil
+}
+
+func FetchRecordLikes(id string) (int, error) {
+	var likes int
+	if err := database.DB.Get(&likes, `SELECT likes FROM record WHERE id = ?`, id); err != nil {
+		log.Println("Fetching likes failed: ", err)
+		return 0, err
+	}
+	return likes, nil
+}
+
+func LikeTheRecord(id string, likes int) error {
+	if _, err := database.DB.Exec(
+		`UPDATE record
+        SET likes = ?
+        WHERE id = ?
+        `, likes, id,
 	); err != nil {
 		return err
 	}

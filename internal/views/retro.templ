@@ -1,19 +1,56 @@
 package views
 
 import "arcade/internal/models"
+import "fmt"
 
-templ RetroItem(content, author string) {
-	<div class="column-item">
+func getCommentURL(id string) string {
+	return fmt.Sprintf("/record/%s/comments", id)
+}
+
+func getCommentCountURL(id string) string {
+	return fmt.Sprintf("/count-comments/%s", id)
+}
+
+templ RetroItem(record models.Record) {
+	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) }>
 		<div class="column-item-content">
-			<p>{ content }</p>
+			<p>{ record.Content }</p>
 		</div>
 		<div class="column-item-title">
-			<p>{ author }</p>
+			<p>{ record.Author }</p>
+			<div class="column-item-title-reactions" hx-trigger="load" hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) } hx-swap="afterbegin">
+				<div hx-get={ getCommentURL(record.Id.String()) } hx-swap="outerHTML" hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }>
+					<i class="fa fa-comment"></i>
+					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load" hx-swap="innerHTML" hx-target="this"></p>
+				</div>
+			</div>
 		</div>
 	</div>
 }
 
-templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string) {
+script autoresize() {
+    const tx = document.getElementsByTagName("textarea");
+    for (let i = 0; i < tx.length; i++) {
+      tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
+      tx[i].addEventListener("input", OnInput, false);
+    }
+
+    function OnInput(e) {
+      this.style.height = 0;
+      this.style.height = (this.scrollHeight) + "px";
+      e.preventDefault();
+    }
+}
+
+func getVisibilityLink(retro_id string) string {
+	return fmt.Sprintf("/retro/%s/change-visibility", retro_id)
+}
+
+func setVisibility(visibility string) string {
+	return fmt.Sprintf(`{"visible": "%s"}`, visibility)
+}
+
+templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string, retro models.Retro, authorized bool) {
 	@head("Retro time")
 	<body>
 		<div class="default-layout">
@@ -21,26 +58,39 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 			<div class="default-container">
 				<div class="default-container-title">
 					<h6>{ retro_title }</h6>
+					if authorized {
+						if retro.Visible {
+							<button class="primary-button" hx-vals={ setVisibility("true") } hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
+								<i class="fa fa-lock"></i> Make private
+							</button>
+						} else {
+							<button class="primary-button" hx-vals={ setVisibility("false") } hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
+								<i class="fa fa-unlock"></i> Make visible
+							</button>
+						}
+					}
 				</div>
-				<div class="columns-container">
+				<div class="column-container-content">
 					for category := range records {
-						<div id={ c_ids[category] } class="column">
-							<form hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
-								<div class="column-title">
-									<p>{ category }</p>
-								</div>
-								<input type="hidden" name="category" value={ category }/>
-								// TODO: this is a text area
-								<input class="primary-input" placeholder="Content" type="text" name="content"/>
-								<button class="primary-button">Post</button>
-							</form>
-							for _, record := range records[category] {
-								@RetroItem(record.Content, record.Author)
-							}
+						<div class="column">
+							<div class="column-title">
+								<p><strong>{ category }</strong></p>
+							</div>
+							<div class="comments" id={ c_ids[category] }>
+								<form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
+									<input required type="hidden" name="category" value={ category }/>
+									<textarea required placeholder="Please enter to leave a comment" type="text" name="content"></textarea>
+									<button class="primary-button">Post</button>
+								</form>
+								for _, record := range records[category] {
+									@RetroItem(record)
+								}
+							</div>
 						</div>
 					}
 				</div>
 			</div>
 		</div>
+		@autoresize()
 	</body>
 }
