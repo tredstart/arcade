@@ -3,7 +3,6 @@ package utils
 import (
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -64,7 +63,3 @@ func Reverse[T any](slice []T) []T {
 	return reversed
 }
 
-func IsStringNumeric(s string) bool {
-	_, err := strconv.Atoi(s) // Atoi converts string to int; returns error if conversion fails
-	return err == nil         // If err is nil, the string is numeric
-}

@@ -186,8 +186,7 @@ func RetroItemCreate(c echo.Context) error {
 func RetroCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-		log.Error(err.Error())
-		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+        return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	c.Request().ParseForm()
 	log.Error(c.Request().Form)
