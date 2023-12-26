@@ -6,7 +6,7 @@ import "fmt"
 templ CommentsBlock(comments []models.Comment, record_id string) {
 	<div id={ fmt.Sprintf("comments-list-%s", record_id) } class="column-item-reaction-comments">
 		<div>
-			<button class="secondary-button" hx-get={ fmt.Sprintf("/record/%s/likes", record_id) } hx-target={ fmt.Sprintf("#comments-list-%s", record_id) } hx-swap="outerHTML">Close</button>
+			<button class="secondary-button" hx-get={ fmt.Sprintf("/record/%s", record_id) } hx-target={ fmt.Sprintf("#comments-list-%s", record_id) } hx-swap="outerHTML">Close</button>
 		</div>
 		<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }>
 			<p><strong>Leave a comment:</strong></p>

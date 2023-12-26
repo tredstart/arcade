@@ -38,7 +38,7 @@ func CommentsBlock(comments []models.Comment, record_id string) templ.Component 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/record/%s/likes", record_id)))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/record/%s", record_id)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
