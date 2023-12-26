@@ -6,7 +6,7 @@ import "fmt"
 templ CommentsBlock(comments []models.Comment, record_id string) {
 	<div id={ fmt.Sprintf("comments-list-%s", record_id) } class="column-item-reaction-comments">
 		<div>
-			<button class="secondary-button" hx-get={ fmt.Sprintf("/record/%s", record_id) } hx-target={ fmt.Sprintf("#comments-list-%s", record_id) } hx-swap="outerHTML">Close</button>
+			<button class="secondary-button" hx-get={ fmt.Sprintf("/record/%s/likes", record_id) } hx-target={ fmt.Sprintf("#comments-list-%s", record_id) } hx-swap="outerHTML">Close</button>
 		</div>
 		<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }>
 			<p><strong>Leave a comment:</strong></p>
@@ -23,15 +23,10 @@ templ CommentsBlock(comments []models.Comment, record_id string) {
 }
 
 templ Comment(comment models.Comment) {
-	<div class="column-item-reaction-comments-list-item">
+	<div class="column-item-reaction-comments-list-item" hx-get={ fmt.Sprintf("/comments/%s/%d", comment.Id.String(), comment.Likes) } hx-swap="beforeend" hx-trigger="load">
 		<div class="content">
 			<p><strong>{ comment.Author }</strong> commented:</p>
 			<p>{ comment.Content }</p>
 		</div>
-		<div class="likes" hx-vals={ fmt.Sprintf(`{"likes": %d}`, comment.Likes) } hx-patch={ fmt.Sprintf("/comments/%s", comment.Id.String()) } hx-swap="outerHTML">
-			<i class="fa fa-thumbs-up likes active"></i>
-			<p>{ fmt.Sprint(comment.Likes) }</p>
-		</div>
 	</div>
 }
-

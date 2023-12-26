@@ -8,25 +8,19 @@ func getCommentURL(id string) string {
 }
 
 func getCommentCountURL(id string) string {
-    return fmt.Sprintf("/count-comments/%s", id)
+	return fmt.Sprintf("/count-comments/%s", id)
 }
 
 templ RetroItem(record models.Record) {
-	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) } >
+	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) }>
 		<div class="column-item-content">
 			<p>{ record.Content }</p>
 		</div>
 		<div class="column-item-title">
 			<p>{ record.Author }</p>
-			<div class="column-item-title-reactions">
-				// ACTION HERE
-				<div class="likes" hx-vals={ fmt.Sprintf(`{"likes": "%d"}`, record.Likes) } hx-patch={ fmt.Sprintf("/record/%s", record.Id.String()) } hx-swap="outerHTML">
-					<i class="fa fa-thumbs-up active"></i>
-					<p>{ fmt.Sprint(record.Likes) } </p>
-				</div>
-				// ACTION HERE
+			<div class="column-item-title-reactions" hx-trigger="load" hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) } hx-swap="afterbegin">
 				<div>
-					<i class="fa fa-comment" hx-get={ getCommentURL(record.Id.String()) } hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) } hx-swap="outerHTML" ></i>
+					<i class="fa fa-comment" hx-get={ getCommentURL(record.Id.String()) } hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) } hx-swap="outerHTML"></i>
 					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load"></p>
 				</div>
 			</div>
@@ -52,6 +46,10 @@ func getVisibilityLink(retro_id string) string {
 	return fmt.Sprintf("/retro/%s/change-visibility", retro_id)
 }
 
+func setVisibility(visibility string) string {
+	return fmt.Sprintf(`{"visible": "%s"}`, visibility)
+}
+
 templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string, retro models.Retro, authorized bool) {
 	@head("Retro time")
 	<body>
@@ -62,11 +60,11 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 					<h6>{ retro_title }</h6>
 					if authorized {
 						if retro.Visible {
-							<button class="primary-button" hx-vals='{"visible": "true"}' hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
+							<button class="primary-button" hx-vals={ setVisibility("true") } hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
 								<i class="fa fa-lock"></i> Make private
 							</button>
 						} else {
-							<button class="primary-button" hx-vals='{"visible": "false"}' hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
+							<button class="primary-button" hx-vals={ setVisibility("false") } hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
 								<i class="fa fa-unlock"></i> Make visible
 							</button>
 						}

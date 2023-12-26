@@ -8,9 +8,9 @@ templ errorBlock(content string) {
 	</div>
 }
 
-templ EmptyLike(likes int) {
-	<div class="likes">
-		<i class="fa fa-thumbs-up likes active"></i>
-		<p>{ fmt.Sprint(likes) }</p>
+templ Like(likes, request, active string) {
+	<div class="likes" hx-vals={ fmt.Sprintf(`{"likes": %s}`, likes) } hx-patch={ request } hx-swap="outerHTML">
+		<i class={ fmt.Sprintf("fa fa-thumbs-up likes %s", active) }></i>
+		<p>{ likes }</p>
 	</div>
 }

@@ -25,7 +25,6 @@ func FetchComment(id uuid.UUID) (Comment, error) {
 
 func CountComments(record_id string) (int, error) {
     var count int = 0 
-    log.Println(record_id)
     if err := database.DB.Get(&count, `SELECT COUNT(id) FROM comment WHERE record = ?`, record_id); err != nil {
         log.Println(err.Error())
         return count, err

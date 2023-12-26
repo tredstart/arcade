@@ -74,26 +74,50 @@ func CommentLike(c echo.Context) error {
 
 	comment_id := c.Param("comment_id")
 	likes, err := strconv.Atoi(c.FormValue("likes"))
+    active := "active"
 
 	if err != nil {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
-
 	if strings.Contains(liked, comment_id) {
-		return views.EmptyLike(likes).Render(c.Request().Context(), c.Response().Writer)
+		likes--
+		liked = strings.ReplaceAll(liked, fmt.Sprintf(" %s", comment_id), "")
+        active = ""
+	} else {
+		likes++
+		liked += fmt.Sprintf(" %s", comment_id)
 	}
 
-	likes++
 	err = models.LikeTheComment(comment_id, likes)
 	if err != nil {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
-    liked += fmt.Sprintf(" %s", comment_id)
+	utils.WriteCookie(c, "comments", liked)
 
-    utils.WriteCookie(c, "comments", liked)
+	return views.Like(fmt.Sprint(likes), fmt.Sprintf("/comments/%s", comment_id), active).Render(c.Request().Context(), c.Response().Writer)
+}
 
-	return views.EmptyLike(likes).Render(c.Request().Context(), c.Response().Writer)
+func CommentsLike(c echo.Context) error {
+
+	if _, err := utils.ReadCookie(c, "name"); err != nil {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+
+	var liked string
+
+	if l, err := utils.ReadCookie(c, "comments"); err == nil {
+		liked = l.Value
+	}
+
+	comment_id := c.Param("comment_id")
+    likes := c.Param("likes")
+    active := ""
+
+	if strings.Contains(liked, comment_id) {
+        active = "active"
+	}
+	return views.Like(likes, fmt.Sprintf("/comments/%s", comment_id), active).Render(c.Request().Context(), c.Response().Writer)
 }

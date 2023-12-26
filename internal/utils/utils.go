@@ -24,6 +24,7 @@ func WriteCookie(c echo.Context, name, value string) {
 	cookie.Value = value
 	cookie.Expires = time.Now().Add(24 * time.Hour)
 	cookie.SameSite = http.SameSiteStrictMode
+    cookie.Path = "/"
 	c.SetCookie(cookie)
 }
 

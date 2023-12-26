@@ -36,10 +36,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 
     e.POST("/retro/:id/change-visibility", routes.RetroMakeVisible)
     e.PATCH("/record/:record_id", routes.RecordLike)
-    e.GET("/record/:record_id", routes.RecordView)
+    e.GET("/record/:record_id/likes", routes.RecordView)
+    e.GET("/record/:record_id/likes/:likes", routes.RecordLikes)
     e.GET("/record/:record_id/comments", routes.CommentsView)
     e.POST("/record/:record_id/comments", routes.CommentsAdd)
     e.PATCH("/comments/:comment_id", routes.CommentLike)
+    e.GET("/comments/:comment_id/:likes", routes.CommentsLike)
     e.GET("/count-comments/:record_id", routes.CommentsCount)
 
 	return e
