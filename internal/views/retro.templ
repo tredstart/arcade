@@ -19,9 +19,9 @@ templ RetroItem(record models.Record) {
 		<div class="column-item-title">
 			<p>{ record.Author }</p>
 			<div class="column-item-title-reactions" hx-trigger="load" hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) } hx-swap="afterbegin">
-				<div>
-					<i class="fa fa-comment" hx-get={ getCommentURL(record.Id.String()) } hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) } hx-swap="outerHTML"></i>
-					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load"></p>
+				<div hx-get={ getCommentURL(record.Id.String()) } hx-swap="outerHTML" hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }>
+					<i class="fa fa-comment"></i>
+					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load" hx-swap="innerHTML" hx-target="this"></p>
 				</div>
 			</div>
 		</div>
