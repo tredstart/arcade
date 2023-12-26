@@ -1,7 +1,16 @@
 package views
 
+import "fmt"
+
 templ errorBlock(content string) {
 	<div class="error-message">
 		{ content }
+	</div>
+}
+
+templ EmptyLike(likes int) {
+	<div class="likes">
+		<i class="fa fa-thumbs-up likes active"></i>
+		<p>{ fmt.Sprint(likes) }</p>
 	</div>
 }

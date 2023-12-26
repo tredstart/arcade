@@ -16,7 +16,7 @@ type Record struct {
     Likes int
 }
 
-func FetchRecord(id uuid.UUID) (Record, error) {
+func FetchRecord(id string) (Record, error) {
 	var record Record
 	if err := database.DB.Get(&record, `SELECT * FROM record WHERE id = ?`, id); err != nil {
 		return Record{}, err

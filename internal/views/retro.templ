@@ -20,7 +20,7 @@ templ RetroItem(record models.Record) {
 			<p>{ record.Author }</p>
 			<div class="column-item-title-reactions">
 				// ACTION HERE
-				<div class="likes">
+				<div class="likes" hx-vals={ fmt.Sprintf(`{"likes": "%d"}`, record.Likes) } hx-patch={ fmt.Sprintf("/record/%s", record.Id.String()) } hx-swap="outerHTML">
 					<i class="fa fa-thumbs-up active"></i>
 					<p>{ fmt.Sprint(record.Likes) } </p>
 				</div>

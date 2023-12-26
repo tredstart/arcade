@@ -4,8 +4,10 @@ import (
 	"arcade/internal/models"
 	"arcade/internal/utils"
 	"arcade/internal/views"
+	"fmt"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -67,7 +69,55 @@ func RetroPage(c echo.Context) error {
 }
 
 func RecordLike(c echo.Context) error {
-    return nil
+	if _, err := utils.ReadCookie(c, "name"); err != nil {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+
+	var liked string
+
+	if l, err := utils.ReadCookie(c, "items"); err == nil {
+		liked = l.Value
+	}
+
+	record_id := c.Param("record_id")
+	likes, err := strconv.Atoi(c.FormValue("likes"))
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	if strings.Contains(liked, record_id) {
+		return views.EmptyLike(likes).Render(c.Request().Context(), c.Response().Writer)
+	}
+
+	likes++
+	err = models.LikeTheRecord(record_id, likes)
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+    liked += fmt.Sprintf(" %s", record_id)
+
+    utils.WriteCookie(c, "items", liked)
+
+	return views.EmptyLike(likes).Render(c.Request().Context(), c.Response().Writer)
+}
+
+func RecordView(c echo.Context) error {
+
+
+    record_id := c.Param("record_id")
+
+    record, err := models.FetchRecord(record_id)
+    
+    if err != nil {
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+    }
+
+    return views.RetroItem(record).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroMakeVisible(c echo.Context) error {
