@@ -98,6 +98,31 @@
       width: 100%;
       margin-top: @elementSpace;
 
+      &-actions{
+        width: 100%;
+
+        & .close-icon{
+          display: block;
+          width: 25px;
+          height: 25px;
+          position: relative;
+          cursor: pointer;
+          margin-left: auto;
+
+          &::before{
+            .default-cross-line();
+            background: @darkColor;
+            transform: rotate(45deg);
+          }
+
+          &::after{
+            .default-cross-line();
+            background: @darkColor;
+            transform: rotate(-45deg);
+          }
+        }
+      }
+
       & form{
         margin: @elementSpace 0;
 

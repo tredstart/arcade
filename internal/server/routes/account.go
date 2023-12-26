@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
@@ -28,7 +27,7 @@ func Login(c echo.Context) error {
 		if strings.Contains(err.Error(), "no rows") {
 			return views.Login("No user found with this username").Render(c.Request().Context(), c.Response().Writer)
 		}
-        log.Error(err.Error())
+		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again.")
 	}
 	if !utils.CheckPasswordHash(p, user.Password) {
@@ -51,7 +50,7 @@ func Register(c echo.Context) error {
 		return views.Register("Password cannot be less than 6 characters").Render(c.Request().Context(), c.Response().Writer)
 	}
 	if password != c.Request().FormValue("confirm") {
-		err := &utils.CustomError{S: "Passwords are not same"}
+		err := &utils.CustomError{S: "Passwords are not the same"}
 		return views.Register(err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 	user.Id = uuid.New()
@@ -65,13 +64,13 @@ func Register(c echo.Context) error {
 	}
 	p, err := utils.HashPassword(password)
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	user.Password = p
 	if err := models.CreateUser(&user); err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	utils.WriteCookie(c, "name", user.Name)
 	utils.WriteCookie(c, "user", user.Id.String())
@@ -87,8 +86,8 @@ func UpdateUserForm(c echo.Context) error {
 
 	user, err := models.FetchUser(user_id.Value)
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
 	return views.UpdateUser(user, "").Render(c.Request().Context(), c.Response().Writer)
@@ -103,12 +102,12 @@ func UpdateUser(c echo.Context) error {
 
 	user, err := models.FetchUser(user_id.Value)
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	password := c.Request().FormValue("password")
 	if password != c.Request().FormValue("confirm") {
-		err := &utils.CustomError{S: "Passwords are not same"}
+		err := &utils.CustomError{S: "Passwords are not the same"}
 		return views.UpdateUser(user, err.Error()).Render(c.Request().Context(), c.Response().Writer)
 	}
 
@@ -117,13 +116,13 @@ func UpdateUser(c echo.Context) error {
 	user.Username = c.Request().FormValue("username")
 	p, err := utils.HashPassword(password)
 	if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	user.Password = p
 	if err := models.UpdateUser(&user); err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
 	return c.Redirect(http.StatusSeeOther, "/templates")
