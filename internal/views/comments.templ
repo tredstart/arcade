@@ -13,6 +13,7 @@ templ CommentsBlock(comments []models.Comment, record_id string) {
  						hx-get={ fmt.Sprintf("/record/%s", record_id) }
  						hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }
  						hx-swap="outerHTML"
+ 						hx-headers={ fmt.Sprint(`{"Load-Bottom": true}`) }
 					></div>
 				</div>
 				<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }>
@@ -32,7 +33,12 @@ templ CommentsBlock(comments []models.Comment, record_id string) {
 }
 
 templ Comment(comment models.Comment) {
-	<div class="column-item-reaction-comments-list-item" hx-get={ fmt.Sprintf("/comments/%s/%d", comment.Id.String(), comment.Likes) } hx-swap="beforeend" hx-trigger="load">
+	<div
+ 		class="column-item-reaction-comments-list-item"
+ 		hx-get={ fmt.Sprintf("/comments/%s/%d", comment.Id.String(), comment.Likes) }
+ 		hx-swap="beforeend"
+ 		hx-trigger="load"
+	>
 		<div class="content">
 			<p><strong>{ comment.Author }</strong> commented:</p>
 			<p>{ comment.Content }</p>

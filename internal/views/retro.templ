@@ -31,6 +31,8 @@ templ UpdateRetroItemForm(content, retro_id, record_id string) {
 		<button
  			type="button"
  			class="secondary-button"
+ 			hx-get={ fmt.Sprintf("/record/%s", record_id) }
+ 			hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
 		>Cancel</button>
 	</form>
 }

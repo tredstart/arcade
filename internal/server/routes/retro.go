@@ -148,17 +148,19 @@ func RecordView(c echo.Context) error {
 	record_id := c.Param("record_id")
 
 	record, err := models.FetchRecord(record_id)
-	log.Warn(c.Request().Header)
 
 	if err != nil {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
-	// if c.Request().Header contains HX-Request = true
-	// return render retro itembottom
+    log.Warn(c.Request().Header)
+	if c.Request().Header["Load-Bottom"] != nil {
+		return views.RetroItemBottom(record).Render(c.Request().Context(), c.Response().Writer)
+	} else {
+		return views.RetroItem(record, true, record.Retro.String()).Render(c.Request().Context(), c.Response().Writer)
+	}
 
-	return views.RetroItemBottom(record).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroMakeVisible(c echo.Context) error {
