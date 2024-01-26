@@ -13,7 +13,7 @@ type Record struct {
 	Author   string
 	Category string
 	Content  string
-    Likes int
+	Likes    int
 }
 
 func FetchRecord(id string) (Record, error) {
@@ -33,6 +33,15 @@ func FetchRecordsByRetro(retro_id uuid.UUID) ([]Record, error) {
 	return records, nil
 }
 
+func FetchRecordsByRetroAndName(retro_id uuid.UUID, name string) ([]Record, error) {
+	var records []Record
+	if err := database.DB.Select(&records, `SELECT * FROM record WHERE retro = ? AND author = ?`, retro_id, name); err != nil {
+		log.Println("Couldn't get any records: ", err)
+		return []Record{}, err
+	}
+	return records, nil
+}
+
 func CreateRecord(t *Record) error {
 	if _, err := database.DB.Exec(
 		`INSERT INTO record VALUES (?, ?, ?, ?, ?, ?)`,
@@ -41,7 +50,7 @@ func CreateRecord(t *Record) error {
 		t.Author,
 		t.Category,
 		t.Content,
-        t.Likes,
+		t.Likes,
 	); err != nil {
 		return err
 	}
@@ -69,11 +78,24 @@ func LikeTheRecord(id string, likes int) error {
 	return nil
 }
 
-func DeleteRecord(id uuid.UUID) error {
+func RecordUpdateContent(id, content, author, retro string) error {
 	if _, err := database.DB.Exec(
-		`DELETE record WHERE id = ?`, id,
+		`UPDATE record
+        SET content = ?
+        WHERE id = ? AND author = ? AND retro = ?
+        `, content, id, author, retro,
 	); err != nil {
-		return nil
+		return err
+	}
+	return nil
+}
+
+func RecordDelete(id, author, retro string) error {
+	if _, err := database.DB.Exec(
+		`DELETE FROM record WHERE id = ? AND author = ? AND retro = ?`,
+		id, author, retro,
+	); err != nil {
+		return err
 	}
 	return nil
 }

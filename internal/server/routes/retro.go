@@ -23,7 +23,8 @@ func RetroPage(c echo.Context) error {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
-	if _, err := utils.ReadCookie(c, "name"); err != nil {
+	name, err := utils.ReadCookie(c, "name")
+	if err != nil {
 		return c.Redirect(http.StatusSeeOther, "/guest?next=/retro/"+retro_id.String())
 	}
 	retro, err := models.FetchRetro(retro_id)
@@ -37,7 +38,6 @@ func RetroPage(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
-	records, _ := models.FetchRecordsByRetro(retro_id)
 	categories := strings.Split(template.Categories, ", ")
 	context := make(map[string][]models.Record)
 	c_ids := make(map[string]string)
@@ -48,12 +48,21 @@ func RetroPage(c echo.Context) error {
 		regex := regexp.MustCompile(`[^a-zA-Z_\-]`)
 		c_ids[category] = regex.ReplaceAllString(category, "_")
 		if retro.Visible {
+			records, _ := models.FetchRecordsByRetro(retro_id)
+			for _, record := range records {
+				if record.Category == category {
+					context[category] = append(context[category], record)
+				}
+			}
+		} else {
+			records, _ := models.FetchRecordsByRetroAndName(retro_id, name.Value)
 			for _, record := range records {
 				if record.Category == category {
 					context[category] = append(context[category], record)
 				}
 			}
 		}
+
 	}
 
 	user_id, err := utils.ReadCookie(c, "user")
@@ -79,12 +88,12 @@ func RecordLike(c echo.Context) error {
 	if l, err := utils.ReadCookie(c, "records"); err == nil {
 		liked = l.Value
 	}
-    
-    c.Request().ParseForm()
+
+	c.Request().ParseForm()
 
 	record_id := c.Param("record_id")
 	likes, err := strconv.Atoi(c.FormValue("likes"))
-    active := "active"
+	active := "active"
 
 	if err != nil {
 		log.Error(err.Error())
@@ -93,7 +102,7 @@ func RecordLike(c echo.Context) error {
 	if strings.Contains(liked, record_id) {
 		likes--
 		liked = strings.ReplaceAll(liked, fmt.Sprintf(" %s", record_id), "")
-        active = ""
+		active = ""
 	} else {
 		likes++
 		liked += fmt.Sprintf(" %s", record_id)
@@ -123,11 +132,11 @@ func RecordLikes(c echo.Context) error {
 	}
 
 	record_id := c.Param("record_id")
-    likes := c.Param("likes")
-    var active string
+	likes := c.Param("likes")
+	var active string
 	if strings.Contains(liked, record_id) {
-        active = "active"
-    } 
+		active = "active"
+	}
 	return views.Like(fmt.Sprint(likes), fmt.Sprintf("/record/%s", record_id), active).Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -186,7 +195,7 @@ func RetroItemCreate(c echo.Context) error {
 func RetroCreate(c echo.Context) error {
 	user, err := utils.ReadCookie(c, "user")
 	if err != nil {
-        return c.Redirect(http.StatusSeeOther, "/login")
+		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	c.Request().ParseForm()
 	log.Error(c.Request().Form)
@@ -202,4 +211,66 @@ func RetroCreate(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	return c.Redirect(http.StatusSeeOther, "/retro/"+new_retro.Id.String())
+}
+
+func RetroDelete(c echo.Context) error {
+	user, err := utils.ReadCookie(c, "user")
+
+	if err != nil {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+
+	id := c.Param("id")
+
+	if err = models.RetroDelete(id, user.Value); err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	return nil
+}
+
+func RetroItemDelete(c echo.Context) error {
+	name, err := utils.ReadCookie(c, "name")
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	retro_id := c.Param("id")
+	record_id := c.Param("record_id")
+
+	if err = models.RecordDelete(record_id, name.Value, retro_id); err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	return nil
+}
+
+func RetroItemUpdate(c echo.Context) error {
+	name, err := utils.ReadCookie(c, "name")
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	retro_id := c.Param("id")
+	record_id := c.Param("record_id")
+	content := c.FormValue("content")
+
+	if err = models.RecordUpdateContent(record_id, content, name.Value, retro_id); err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+    record, err := models.FetchRecord(record_id)
+    if err != nil {
+        log.Error(err.Error())
+        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+    }
+
+    return views.RetroItem(record).Render(c.Request().Context(), c.Response().Writer)
 }

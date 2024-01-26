@@ -11,17 +11,52 @@ func getCommentCountURL(id string) string {
 	return fmt.Sprintf("/count-comments/%s", id)
 }
 
+script resetForm() {
+    document.addEventListener("htmx:afterSwap", function(event) {
+        const form = event.target.querySelector(".primary-form");
+        if (form !== null) {
+            form.reset();
+        }
+    });
+}
+
+templ UpdateRetroItemForm(content string) {
+	<form hx-patch="" hx-swap="outerHTML" hx-target="this">
+		<textarea required type="text" name="content" value={ content }></textarea>
+		<button class="primary-button">Update post</button>
+	</form>
+}
+
 templ RetroItem(record models.Record) {
 	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) }>
+        <div>
+            <button type="button" hx-trigger="click">Update</button>
+            <button type="button" hx-trigger="click">Delete</button>
+        </div>
 		<div class="column-item-content">
 			<p>{ record.Content }</p>
 		</div>
 		<div class="column-item-title">
 			<p>{ record.Author }</p>
-			<div class="column-item-title-reactions" hx-trigger="load" hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) } hx-swap="afterbegin">
-				<div hx-get={ getCommentURL(record.Id.String()) } hx-swap="outerHTML" hx-trigger="click" hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }>
+			<div
+ 				class="column-item-title-reactions"
+ 				hx-trigger="load"
+ 				hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
+ 				hx-swap="afterbegin"
+			>
+				<div
+ 					hx-get={ getCommentURL(record.Id.String()) }
+ 					hx-swap="outerHTML"
+ 					hx-trigger="click"
+ 					hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
+				>
 					<i class="fa fa-comment"></i>
-					<p hx-get={ getCommentCountURL(record.Id.String()) } hx-trigger="load" hx-swap="innerHTML" hx-target="this"></p>
+					<p
+ 						hx-get={ getCommentCountURL(record.Id.String()) }
+ 						hx-trigger="load"
+ 						hx-swap="innerHTML"
+ 						hx-target="this"
+					></p>
 				</div>
 			</div>
 		</div>
@@ -60,14 +95,31 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 					<h6>{ retro_title }</h6>
 					if authorized {
 						if retro.Visible {
-							<button class="primary-button" hx-vals={ setVisibility("true") } hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
+							<button
+ 								class="primary-button"
+ 								hx-vals={ setVisibility("true") }
+ 								hx-post={ getVisibilityLink(retro.Id.String()) }
+ 								hx-swap="outerHTML"
+ 								hx-target="body"
+							>
 								<i class="fa fa-lock"></i> Make private
 							</button>
 						} else {
-							<button class="primary-button" hx-vals={ setVisibility("false") } hx-post={ getVisibilityLink(retro.Id.String()) } hx-swap="outerHTML" hx-target="body">
+							<button
+ 								class="primary-button"
+ 								hx-vals={ setVisibility("false") }
+ 								hx-post={ getVisibilityLink(retro.Id.String()) }
+ 								hx-swap="outerHTML"
+ 								hx-target="body"
+							>
 								<i class="fa fa-unlock"></i> Make visible
 							</button>
 						}
+					}
+					if !retro.Visible {
+						<div>
+							<p>This retro is in invisible mode. Only your posts are visible to you at the moment.</p>
+						</div>
 					}
 				</div>
 				<div class="column-container-content">
@@ -77,9 +129,15 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 								<p><strong>{ category }</strong></p>
 							</div>
 							<div class="comments" id={ c_ids[category] }>
-								<form class="primary-form" hx-post="" hx-swap="beforeend" hx-target={ "#" + c_ids[category] }>
+								<form
+ 									class="primary-form"
+ 									hx-post=""
+ 									hx-swap="beforeend"
+ 									hx-target={ "#" + c_ids[category] }
+ 									data-reset-on-load
+								>
 									<input required type="hidden" name="category" value={ category }/>
-									<textarea required placeholder="Please enter to leave a comment" type="text" name="content"></textarea>
+									<textarea required placeholder="Type here to make a post" type="text" name="content"></textarea>
 									<button class="primary-button">Post</button>
 								</form>
 								for _, record := range records[category] {
@@ -92,5 +150,6 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 			</div>
 		</div>
 		@autoresize()
+		@resetForm()
 	</body>
 }

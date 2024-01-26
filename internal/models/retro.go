@@ -64,3 +64,11 @@ func RetroSetVisibility(id string, visible bool) error {
 	return nil
 }
 
+func RetroDelete(id, user_id string) error {
+	if _, err := database.DB.Exec(
+		`DELETE FROM retro WHERE id = ? AND user = ?`, id, user_id,
+	); err != nil {
+		return err
+	}
+	return nil
+}

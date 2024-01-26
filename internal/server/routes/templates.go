@@ -54,3 +54,20 @@ func TemplatesCreate(c echo.Context) error {
 
 	return c.Redirect(http.StatusSeeOther, "/templates")
 }
+
+func TemplatesDelete(c echo.Context) error {
+	user, err := utils.ReadCookie(c, "user")
+
+	if err != nil {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+
+	id := c.Param("template_id")
+
+    if err = models.DeleteTemplate(id, user.Value); err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+    }
+
+    return nil
+}

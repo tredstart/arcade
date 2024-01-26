@@ -4,26 +4,31 @@ import "arcade/internal/models"
 import "fmt"
 
 templ CommentsBlock(comments []models.Comment, record_id string) {
-    <div class="column-item" id={ fmt.Sprintf("comments-list-%s", record_id) }>
-        <div class="column-item-reaction">
-        	<div class="column-item-reaction-comments">
-        	    <div class="column-item-reaction-comments-actions">
-        		    <div class="close-icon" hx-get={ fmt.Sprintf("/record/%s", record_id) } hx-target={ fmt.Sprintf("#comments-list-%s", record_id) } hx-swap="outerHTML"></div>
-        	    </div>
-        		<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }>
-        			<p><strong>Leave a comment:</strong></p>
-        			<textarea required placeholder="Your comment here" name="content"></textarea>
-        			<button class="secondary-button">Comment</button>
-        		</form>
-        		<p><strong>Comments:</strong></p>
-        		for _, comment := range comments {
-        			<div class="column-item-reaction-comments-list">
-        				@Comment(comment)
-        			</div>
-        		}
-        	</div>
-        </div>
-    </div>
+	<div class="column-item" id={ fmt.Sprintf("comments-list-%s", record_id) }>
+		<div class="column-item-reaction">
+			<div class="column-item-reaction-comments">
+				<div class="column-item-reaction-comments-actions">
+					<div
+ 						class="close-icon"
+ 						hx-get={ fmt.Sprintf("/record/%s", record_id) }
+ 						hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }
+ 						hx-swap="outerHTML"
+					></div>
+				</div>
+				<form hx-post={ getCommentURL(record_id) } hx-swap="beforeend" hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }>
+					<p><strong>Leave a comment:</strong></p>
+					<textarea required placeholder="Your comment here" name="content"></textarea>
+					<button class="secondary-button">Comment</button>
+				</form>
+				<p><strong>Comments:</strong></p>
+				for _, comment := range comments {
+					<div class="column-item-reaction-comments-list">
+						@Comment(comment)
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 }
 
 templ Comment(comment models.Comment) {

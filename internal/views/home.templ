@@ -1,17 +1,10 @@
 package views
 
 import "arcade/internal/models"
-
-templ HomePage() {
-	@head("Home")
-	<body>
-		<a href="/history">History</a>
-		<a href="/templates">New retro</a>
-	</body>
-}
+import "fmt"
 
 templ HistoryPage(retros []models.Retro) {
-	@head("History")
+	@head("Retrospectives")
 	<body>
 		<div class="default-layout">
 			@aside()
@@ -22,13 +15,24 @@ templ HistoryPage(retros []models.Retro) {
 				if len(retros) != 0 {
 					<div class="history-list">
 						for _, retro := range retros {
-							<li class="history-list-item">
-								<a href={ templ.URL("/retro/" + retro.Id.String()) }>
-									<h6>
-										{ retro.Created }
-									</h6>
-								</a>
-							</li>
+							<div id={ fmt.Sprintf("retro-%s", retro.Id.String()) }>
+								<div class="column-item-reaction-comments-actions">
+									<div
+ 										class="close-icon"
+ 										hx-delete={ fmt.Sprintf("/retro/%s", retro.Id.String()) }
+ 										hx-target={ fmt.Sprintf("#retro-%s", retro.Id.String()) }
+ 										hx-swap="delete"
+                                        hx-confirm="Do you really want to delete this retro?"
+									></div>
+									<li class="history-list-item">
+										<a href={ templ.URL("/retro/" + retro.Id.String()) }>
+											<h6>
+												{ retro.Created }
+											</h6>
+										</a>
+									</li>
+								</div>
+							</div>
 						}
 					</div>
 				} else {

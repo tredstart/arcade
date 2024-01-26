@@ -20,7 +20,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.POST("/login", routes.Login)
 	e.GET("/register", routes.RegisterForm)
 	e.POST("/register", routes.Register)
-	e.GET("/history", routes.History)
+	e.GET("/retros", routes.History)
 	e.GET("/guest", routes.LoginAsGuestForm)
 	e.POST("/guest", routes.LoginAsGuest)
 
@@ -29,8 +29,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/retro/:id", routes.RetroPage)
 	e.POST("/retro/:id", routes.RetroItemCreate)
+	e.DELETE("/retro/:id", routes.RetroDelete)
 	e.POST("/retro/new", routes.RetroCreate)
 	e.GET("/templates", routes.Templates)
+    e.DELETE("/templates/:template_id", routes.TemplatesDelete)
 	e.GET("/templates/new", routes.TemplatesNew)
 	e.POST("/templates/new", routes.TemplatesCreate)
 
@@ -48,5 +50,5 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func (s *Server) IndexPage(c echo.Context) error {
-	return c.Redirect(http.StatusSeeOther, "/history")
+	return c.Redirect(http.StatusSeeOther, "/retros")
 }

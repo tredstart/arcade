@@ -24,12 +24,12 @@ func FetchComment(id uuid.UUID) (Comment, error) {
 }
 
 func CountComments(record_id string) (int, error) {
-    var count int = 0 
-    if err := database.DB.Get(&count, `SELECT COUNT(id) FROM comment WHERE record = ?`, record_id); err != nil {
-        log.Println(err.Error())
-        return count, err
-    }
-    return count, nil
+	var count int = 0
+	if err := database.DB.Get(&count, `SELECT COUNT(id) FROM comment WHERE record = ?`, record_id); err != nil {
+		log.Println(err.Error())
+		return count, err
+	}
+	return count, nil
 }
 
 func FetchCommentsByRecord(id string) ([]Comment, error) {
@@ -73,15 +73,6 @@ func LikeTheComment(id string, likes int) error {
         `, likes, id,
 	); err != nil {
 		return err
-	}
-	return nil
-}
-
-func DeleteComment(id uuid.UUID) error {
-	if _, err := database.DB.Exec(
-		`DELETE comment WHERE id = ?`, id,
-	); err != nil {
-		return nil
 	}
 	return nil
 }

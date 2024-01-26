@@ -64,12 +64,3 @@ func UpdateUser(t *User) error {
 
 	return nil
 }
-
-func DeleteUser(id uuid.UUID) error {
-	if _, err := database.DB.Exec(
-		`DELETE user WHERE id = ?`, id,
-	); err != nil {
-		return nil
-	}
-	return nil
-}
