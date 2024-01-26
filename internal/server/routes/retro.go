@@ -41,6 +41,7 @@ func RetroPage(c echo.Context) error {
 	categories := strings.Split(template.Categories, ", ")
 	context := make(map[string][]models.Record)
 	c_ids := make(map[string]string)
+	auth_table := make(map[string]bool)
 
 	for _, category := range categories {
 		context[category] = []models.Record{}
@@ -53,6 +54,7 @@ func RetroPage(c echo.Context) error {
 				if record.Category == category {
 					context[category] = append(context[category], record)
 				}
+				auth_table[record.Id.String()] = name.Value == record.Author
 			}
 		} else {
 			records, _ := models.FetchRecordsByRetroAndName(retro_id, name.Value)
@@ -60,6 +62,7 @@ func RetroPage(c echo.Context) error {
 				if record.Category == category {
 					context[category] = append(context[category], record)
 				}
+				auth_table[record.Id.String()] = name.Value == record.Author
 			}
 		}
 
@@ -74,7 +77,7 @@ func RetroPage(c echo.Context) error {
 		}
 	}
 
-	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created), retro, authorized).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroPage(context, c_ids, "Retro from "+string(retro.Created), retro, authorized, auth_table).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RecordLike(c echo.Context) error {
@@ -145,13 +148,17 @@ func RecordView(c echo.Context) error {
 	record_id := c.Param("record_id")
 
 	record, err := models.FetchRecord(record_id)
+	log.Warn(c.Request().Header)
 
 	if err != nil {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
-	return views.RetroItem(record).Render(c.Request().Context(), c.Response().Writer)
+	// if c.Request().Header contains HX-Request = true
+	// return render retro itembottom
+
+	return views.RetroItemBottom(record).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroMakeVisible(c echo.Context) error {
@@ -189,7 +196,7 @@ func RetroItemCreate(c echo.Context) error {
 		log.Error(err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
-	return views.RetroItem(record).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroItem(record, true, retro_id.String()).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func RetroCreate(c echo.Context) error {
@@ -249,6 +256,26 @@ func RetroItemDelete(c echo.Context) error {
 	return nil
 }
 
+func RecordUpdateForm(c echo.Context) error {
+	name, err := utils.ReadCookie(c, "name")
+
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	retro_id := c.Param("id")
+	record_id := c.Param("record_id")
+
+	content, err := models.FetchRecordContent(record_id, retro_id, name.Value)
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
+
+	return views.UpdateRetroItemForm(content, retro_id, record_id).Render(c.Request().Context(), c.Response().Writer)
+}
+
 func RetroItemUpdate(c echo.Context) error {
 	name, err := utils.ReadCookie(c, "name")
 
@@ -266,11 +293,11 @@ func RetroItemUpdate(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
-    record, err := models.FetchRecord(record_id)
-    if err != nil {
-        log.Error(err.Error())
-        return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
-    }
+	record, err := models.FetchRecord(record_id)
+	if err != nil {
+		log.Error(err.Error())
+		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
+	}
 
-    return views.RetroItem(record).Render(c.Request().Context(), c.Response().Writer)
+	return views.RetroItem(record, true, retro_id).Render(c.Request().Context(), c.Response().Writer)
 }

@@ -42,6 +42,15 @@ func FetchRecordsByRetroAndName(retro_id uuid.UUID, name string) ([]Record, erro
 	return records, nil
 }
 
+func FetchRecordContent(id, retro_id, name string) (string, error) {
+	var content string
+	if err := database.DB.Get(&content, `SELECT content FROM record WHERE id = ? AND retro = ? AND author = ?`, id, retro_id, name); err != nil {
+		log.Println("Couldn't get any records: ", err)
+        return "", err
+	}
+	return content, nil
+}
+
 func CreateRecord(t *Record) error {
 	if _, err := database.DB.Exec(
 		`INSERT INTO record VALUES (?, ?, ?, ?, ?, ?)`,

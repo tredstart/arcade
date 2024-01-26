@@ -28,6 +28,9 @@ func (s *Server) RegisterRoutes() http.Handler {
     e.PUT("/profile", routes.UpdateUser)
 
 	e.GET("/retro/:id", routes.RetroPage)
+    e.GET("/retro/:id/record/:record_id", routes.RecordUpdateForm)
+    e.PATCH("/retro/:id/record/:record_id", routes.RetroItemUpdate)
+    e.DELETE("/retro/:id/record/:record_id", routes.RetroItemDelete)
 	e.POST("/retro/:id", routes.RetroItemCreate)
 	e.DELETE("/retro/:id", routes.RetroDelete)
 	e.POST("/retro/new", routes.RetroCreate)

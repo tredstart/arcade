@@ -20,45 +20,71 @@ script resetForm() {
     });
 }
 
-templ UpdateRetroItemForm(content string) {
-	<form hx-patch="" hx-swap="outerHTML" hx-target="this">
-		<textarea required type="text" name="content" value={ content }></textarea>
+templ UpdateRetroItemForm(content, retro_id, record_id string) {
+	<form
+ 		hx-patch={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record_id) }
+ 		hx-swap="outerHTML"
+ 		hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
+	>
+		<textarea required type="text" name="content">{ content }</textarea>
 		<button class="primary-button">Update post</button>
+		<button
+ 			type="button"
+ 			class="secondary-button"
+		>Cancel</button>
 	</form>
 }
 
-templ RetroItem(record models.Record) {
-	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) }>
-        <div>
-            <button type="button" hx-trigger="click">Update</button>
-            <button type="button" hx-trigger="click">Delete</button>
-        </div>
-		<div class="column-item-content">
-			<p>{ record.Content }</p>
-		</div>
-		<div class="column-item-title">
-			<p>{ record.Author }</p>
+templ RetroItemBottom(record models.Record) {
+	<div class="column-item-title" id={ fmt.Sprintf("record-bottom-%s", record.Id) }>
+		<p>{ record.Author }</p>
+		<div
+ 			class="column-item-title-reactions"
+ 			hx-trigger="load"
+ 			hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
+ 			hx-swap="afterbegin"
+		>
 			<div
- 				class="column-item-title-reactions"
- 				hx-trigger="load"
- 				hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
- 				hx-swap="afterbegin"
+ 				hx-get={ getCommentURL(record.Id.String()) }
+ 				hx-swap="outerHTML"
+ 				hx-trigger="click"
+ 				hx-target={ fmt.Sprintf("#record-bottom-%s", record.Id) }
 			>
-				<div
- 					hx-get={ getCommentURL(record.Id.String()) }
- 					hx-swap="outerHTML"
+				<i class="fa fa-comment"></i>
+				<p
+ 					hx-get={ getCommentCountURL(record.Id.String()) }
+ 					hx-trigger="load"
+ 					hx-swap="innerHTML"
+ 					hx-target="this"
+				></p>
+			</div>
+		</div>
+	</div>
+}
+
+templ RetroItem(record models.Record, authorized bool, retro_id string) {
+	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) }>
+		if authorized {
+			<div>
+				<button
+ 					type="button"
+ 					hx-get={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
  					hx-trigger="click"
  					hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
-				>
-					<i class="fa fa-comment"></i>
-					<p
- 						hx-get={ getCommentCountURL(record.Id.String()) }
- 						hx-trigger="load"
- 						hx-swap="innerHTML"
- 						hx-target="this"
-					></p>
-				</div>
+ 					hx-swap="innerHTML"
+				>Update</button>
+				<button
+ 					type="button"
+ 					hx-trigger="click"
+ 					hx-delete={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
+ 					hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
+ 					hx-swap="delete"
+				>Delete</button>
 			</div>
+		}
+		<div class="column-item-content">
+			<p>{ record.Content }</p>
+			@RetroItemBottom(record)
 		</div>
 	</div>
 }
@@ -85,7 +111,7 @@ func setVisibility(visibility string) string {
 	return fmt.Sprintf(`{"visible": "%s"}`, visibility)
 }
 
-templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string, retro models.Retro, authorized bool) {
+templ RetroPage(records map[string][]models.Record, c_ids map[string]string, retro_title string, retro models.Retro, authorized bool, auth_table map[string]bool) {
 	@head("Retro time")
 	<body>
 		<div class="default-layout">
@@ -141,7 +167,7 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 									<button class="primary-button">Post</button>
 								</form>
 								for _, record := range records[category] {
-									@RetroItem(record)
+									@RetroItem(record, auth_table[record.Id.String()], retro.Id.String())
 								}
 							</div>
 						</div>
