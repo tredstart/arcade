@@ -29,12 +29,12 @@ func RetroPage(c echo.Context) error {
 	}
 	retro, err := models.FetchRetro(retro_id)
 	if err != nil {
-		log.Error(err.Error())
+        log.Error("retro: ", err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 	template, err := models.FetchTemplate(retro.Template)
 	if err != nil {
-		log.Error(err.Error())
+        log.Error("template: ", err.Error())
 		return c.String(http.StatusInternalServerError, "Oops, something went wrong. Please try again")
 	}
 
@@ -207,7 +207,6 @@ func RetroCreate(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	c.Request().ParseForm()
-	log.Error(c.Request().Form)
 	template_id := c.FormValue("template_id")
 	new_retro := models.Retro{}
 	new_retro.Id = uuid.New()

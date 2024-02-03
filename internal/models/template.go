@@ -48,5 +48,10 @@ func DeleteTemplate(id, user_id string) error {
 	); err != nil {
 		return err
 	}
+	if _, err := database.DB.Exec(
+		`DELETE FROM retro WHERE template = ? AND user = ?`, id, user_id,
+	); err != nil {
+		return err
+	}
 	return nil
 }
