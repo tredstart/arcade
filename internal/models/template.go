@@ -24,7 +24,7 @@ func FetchTemplate(id uuid.UUID) (Template, error) {
 func FetchTemplatesByUser(user_id string) ([]Template, error) {
 	var templates []Template
 	if err := database.DB.Select(&templates, `SELECT * FROM template WHERE user = ?`, user_id); err != nil {
-        log.Println("Database error: ", err)
+		log.Println("Database error: ", err)
 		return []Template{}, err
 	}
 	return templates, nil
@@ -42,11 +42,16 @@ func CreateTemplate(t *Template) error {
 	return nil
 }
 
-func DeleteTemplate(id uuid.UUID) error {
+func DeleteTemplate(id, user_id string) error {
 	if _, err := database.DB.Exec(
-		`DELETE template WHERE id = ?`, id,
+		`DELETE FROM template WHERE id = ? AND user = ?`, id, user_id,
 	); err != nil {
-		return nil
+		return err
+	}
+	if _, err := database.DB.Exec(
+		`DELETE FROM retro WHERE template = ? AND user = ?`, id, user_id,
+	); err != nil {
+		return err
 	}
 	return nil
 }

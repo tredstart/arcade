@@ -47,7 +47,7 @@ func TestLoginAsGuest(t *testing.T) {
 func TestHistoryPageRedirects(t *testing.T) {
     e := echo.New()
     rec := httptest.NewRecorder()
-    req := httptest.NewRequest(http.MethodGet, "/history", nil)
+    req := httptest.NewRequest(http.MethodGet, "/retros", nil)
 
     c := e.NewContext(req, rec)
 

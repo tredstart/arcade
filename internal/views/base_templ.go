@@ -100,7 +100,7 @@ func aside() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></li><li><a class=\"navigation-link\" href=\"/history\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></li><li><a class=\"navigation-link\" href=\"/retros\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
