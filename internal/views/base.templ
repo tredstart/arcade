@@ -12,7 +12,7 @@ templ head(title string) {
 	</head>
 }
 
-script configureNavigation(){
+script configureNavigation() {
     const links = document.querySelectorAll('.navigation-link');
     links.forEach(link => {
         if(window.location.href === link.href){
@@ -21,27 +21,27 @@ script configureNavigation(){
     })
 }
 
-script logout(){
+script logout() {
     document.cookie.split(";").forEach(function(c) {
         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
     window.location.reload();
 }
 
-templ aside(){
-      <aside class="sidebar">
-          <div class="sidebar-title">
-              <img src="/static/images/buga-vuga-logo.png" alt="Arcade" />
-          </div>
-          <div class="sidebar-content">
-              <ul class="sidebar-content-menu">
-                  <li><a class="navigation-link" href="/templates">Templates</a></li>
-                  <li><a class="navigation-link" href="/retros">Retrospectives</a></li>
-                  <li><a class="navigation-link" href="/profile">Account</a></li>
-                  // <li><a class="navigation-link" href="/saved">Saved</a></li> // so maybe if I get real bored I'd do that
-                  <li><a class="navigation-link" onClick={ logout() }>Logout</a></li>
-              </ul>
-          </div>
-          @configureNavigation()
-      </aside>
+templ aside() {
+	<aside class="sidebar">
+		<div class="sidebar-title">
+			<img src="/static/images/buga-vuga-logo.png" alt="Arcade"/>
+		</div>
+		<div class="sidebar-content">
+			<ul class="sidebar-content-menu">
+				<li><a class="navigation-link" href="/templates">Templates</a></li>
+				<li><a class="navigation-link" href="/retros">Retrospectives</a></li>
+				<li><a class="navigation-link" href="/profile">Account</a></li>
+				// <li><a class="navigation-link" href="/saved">Saved</a></li> // so maybe if I get real bored I'd do that
+				<li><a class="navigation-link" onClick={ logout() }>Logout</a></li>
+			</ul>
+		</div>
+		@configureNavigation()
+	</aside>
 }

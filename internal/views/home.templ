@@ -15,24 +15,20 @@ templ HistoryPage(retros []models.Retro) {
 				if len(retros) != 0 {
 					<div class="history-list">
 						for _, retro := range retros {
-							<div id={ fmt.Sprintf("retro-%s", retro.Id.String()) }>
-								<div class="column-item-reaction-comments-actions">
-									<div
- 										class="close-icon"
- 										hx-delete={ fmt.Sprintf("/retro/%s", retro.Id.String()) }
- 										hx-target={ fmt.Sprintf("#retro-%s", retro.Id.String()) }
- 										hx-swap="delete"
-                                        hx-confirm="Do you really want to delete this retro?"
-									></div>
-									<li class="history-list-item">
-										<a href={ templ.URL("/retro/" + retro.Id.String()) }>
-											<h6>
-												{ retro.Created }
-											</h6>
-										</a>
-									</li>
-								</div>
-							</div>
+							<li id={ fmt.Sprintf("retro-%s", retro.Id.String()) } class="history-list-item">
+								<div
+									class="close-icon"
+									hx-delete={ fmt.Sprintf("/retro/%s", retro.Id.String()) }
+									hx-target={ fmt.Sprintf("#retro-%s", retro.Id.String()) }
+									hx-swap="delete"
+									hx-confirm="Do you really want to delete this retro?"
+								></div>
+								<a href={ templ.URL("/retro/" + retro.Id.String()) }>
+									<h6>
+										{ retro.Created }
+									</h6>
+								</a>
+							</li>
 						}
 					</div>
 				} else {

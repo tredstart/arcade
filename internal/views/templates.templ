@@ -61,31 +61,28 @@ templ Templates(templates []models.Template) {
 				<div class="default-container-content">
 					<div class="templates-list">
 						for _, template := range templates {
-							<div id={ fmt.Sprintf("template-%s", template.Id.String()) }>
-								<div class="column-item-reaction-comments-actions">
-									<div
- 										class="close-icon"
- 										hx-delete={ fmt.Sprintf("/templates/%s", template.Id.String()) }
- 										hx-target={ fmt.Sprintf("#template-%s", template.Id.String()) }
- 										hx-swap="delete"
-                                        hx-confirm="Do you really want to delete this template?"
-									></div>
-									<div
- 										class="templates-list-item"
- 										hx-target="body"
- 										hx-swap="outerHTML"
- 										hx-push-url="true"
- 										hx-vals={ getTemplateId(template) }
- 										hx-post="/retro/new"
- 										hx-trigger="click"
-									>
-										<div class="templates-list-item-content">
-											<p>{ template.Categories }</p>
-										</div>
-										<div class="templates-list-item-message">
-											<p><strong>Create retro from this template</strong></p>
-										</div>
-									</div>
+							<div
+								id={ fmt.Sprintf("template-%s", template.Id.String()) }
+								class="templates-list-item"
+								hx-target="body"
+								hx-swap="outerHTML"
+								hx-push-url="true"
+								hx-vals={ getTemplateId(template) }
+								hx-post="/retro/new"
+								hx-trigger="click"
+							>
+								<div
+									class="close-icon"
+									hx-delete={ fmt.Sprintf("/templates/%s", template.Id.String()) }
+									hx-target={ fmt.Sprintf("#template-%s", template.Id.String()) }
+									hx-swap="delete"
+									hx-confirm="Do you really want to delete this template?"
+								></div>
+								<div class="templates-list-item-content">
+									<p>{ template.Categories }</p>
+								</div>
+								<div class="templates-list-item-message">
+									<p><strong>Create retro from this template</strong></p>
 								</div>
 							</div>
 						}

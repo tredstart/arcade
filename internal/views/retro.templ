@@ -22,17 +22,18 @@ script resetForm() {
 
 templ UpdateRetroItemForm(content, retro_id, record_id string) {
 	<form
- 		hx-patch={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record_id) }
- 		hx-swap="outerHTML"
- 		hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
+		hx-patch={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record_id) }
+		hx-swap="outerHTML"
+		hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
+		class="retro-item-update"
 	>
 		<textarea required type="text" name="content">{ content }</textarea>
-		<button class="primary-button">Update post</button>
+		<button class="primary-button">Update</button>
 		<button
- 			type="button"
- 			class="secondary-button"
- 			hx-get={ fmt.Sprintf("/record/%s", record_id) }
- 			hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
+			type="button"
+			class="secondary-button"
+			hx-get={ fmt.Sprintf("/record/%s", record_id) }
+			hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
 		>Cancel</button>
 	</form>
 }
@@ -41,23 +42,23 @@ templ RetroItemBottom(record models.Record) {
 	<div class="column-item-title" id={ fmt.Sprintf("record-bottom-%s", record.Id) }>
 		<p>{ record.Author }</p>
 		<div
- 			class="column-item-title-reactions"
- 			hx-trigger="load"
- 			hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
- 			hx-swap="afterbegin"
+			class="column-item-title-reactions"
+			hx-trigger="load"
+			hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
+			hx-swap="afterbegin"
 		>
 			<div
- 				hx-get={ getCommentURL(record.Id.String()) }
- 				hx-swap="outerHTML"
- 				hx-trigger="click"
- 				hx-target={ fmt.Sprintf("#record-bottom-%s", record.Id) }
+				hx-get={ getCommentURL(record.Id.String()) }
+				hx-swap="outerHTML"
+				hx-trigger="click"
+				hx-target={ fmt.Sprintf("#record-bottom-%s", record.Id) }
 			>
 				<i class="fa fa-comment"></i>
 				<p
- 					hx-get={ getCommentCountURL(record.Id.String()) }
- 					hx-trigger="load"
- 					hx-swap="innerHTML"
- 					hx-target="this"
+					hx-get={ getCommentCountURL(record.Id.String()) }
+					hx-trigger="load"
+					hx-swap="innerHTML"
+					hx-target="this"
 				></p>
 			</div>
 		</div>
@@ -66,28 +67,32 @@ templ RetroItemBottom(record models.Record) {
 
 templ RetroItem(record models.Record, authorized bool, retro_id string) {
 	<div class="column-item" id={ fmt.Sprintf("retro-item-%s", record.Id.String()) }>
-		if authorized {
-			<div>
-				<button
- 					type="button"
- 					hx-get={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
- 					hx-trigger="click"
- 					hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
- 					hx-swap="innerHTML"
-				>Update</button>
-				<button
- 					type="button"
- 					hx-trigger="click"
- 					hx-delete={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
- 					hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
- 					hx-swap="delete"
-				>Delete</button>
-			</div>
-		}
 		<div class="column-item-content">
 			<p>{ record.Content }</p>
-			@RetroItemBottom(record)
+			if authorized {
+				<div class="pizde-flex">
+					<button
+						class="default-button"
+						type="button"
+						hx-get={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
+						hx-trigger="click"
+						hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
+						hx-swap="innerhtml"
+					>
+						Edit
+					</button>
+					<button
+						class="default-button"
+						type="button"
+						hx-trigger="click"
+						hx-delete={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
+						hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
+						hx-swap="delete"
+					>Delete</button>
+				</div>
+			}
 		</div>
+		@RetroItemBottom(record)
 	</div>
 }
 
@@ -97,8 +102,7 @@ script autoresize() {
       tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
       tx[i].addEventListener("input", OnInput, false);
     }
-
-    function OnInput(e) {
+ OnInput(e) {
       this.style.height = 0;
       this.style.height = (this.scrollHeight) + "px";
       e.preventDefault();
@@ -124,21 +128,21 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 					if authorized {
 						if retro.Visible {
 							<button
- 								class="primary-button"
- 								hx-vals={ setVisibility("true") }
- 								hx-post={ getVisibilityLink(retro.Id.String()) }
- 								hx-swap="outerHTML"
- 								hx-target="body"
+								class="primary-button"
+								hx-vals={ setVisibility("true") }
+								hx-post={ getVisibilityLink(retro.Id.String()) }
+								hx-swap="outerHTML"
+								hx-target="body"
 							>
 								<i class="fa fa-lock"></i> Make private
 							</button>
 						} else {
 							<button
- 								class="primary-button"
- 								hx-vals={ setVisibility("false") }
- 								hx-post={ getVisibilityLink(retro.Id.String()) }
- 								hx-swap="outerHTML"
- 								hx-target="body"
+								class="primary-button"
+								hx-vals={ setVisibility("false") }
+								hx-post={ getVisibilityLink(retro.Id.String()) }
+								hx-swap="outerHTML"
+								hx-target="body"
 							>
 								<i class="fa fa-unlock"></i> Make visible
 							</button>
@@ -158,11 +162,11 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 							</div>
 							<div class="comments" id={ c_ids[category] }>
 								<form
- 									class="primary-form"
- 									hx-post=""
- 									hx-swap="beforeend"
- 									hx-target={ "#" + c_ids[category] }
- 									data-reset-on-load
+									class="primary-form"
+									hx-post=""
+									hx-swap="beforeend"
+									hx-target={ "#" + c_ids[category] }
+									data-reset-on-load
 								>
 									<input required type="hidden" name="category" value={ category }/>
 									<textarea required placeholder="Type here to make a post" type="text" name="content"></textarea>

@@ -1,0 +1,20 @@
+.close-icon {
+	display: block;
+	width: 25px;
+	height: 25px;
+	position: relative;
+	cursor: pointer;
+	margin-left: auto;
+
+	&::before {
+		.default-cross-line();
+		background: @darkColor;
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		.default-cross-line();
+		background: @darkColor;
+		transform: rotate(-45deg);
+	}
+}
