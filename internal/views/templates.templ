@@ -1,7 +1,9 @@
 package views
 
-import "arcade/internal/models"
-import "fmt"
+import (
+	"arcade/internal/models"
+	"fmt"
+)
 
 script addInput() {
     const container = document.getElementById('inputsContainer');
@@ -62,28 +64,28 @@ templ Templates(templates []models.Template) {
 					<div class="templates-list">
 						for _, template := range templates {
 							<div
- 								id={ fmt.Sprintf("template-%s", template.Id.String()) }
- 								class="templates-list-item"
+								id={ fmt.Sprintf("template-%s", template.Id.String()) }
+								class="templates-list-item"
 							>
 								<div
- 									class="close-icon"
- 									hx-delete={ fmt.Sprintf("/templates/%s", template.Id.String()) }
- 									hx-target={ fmt.Sprintf("#template-%s", template.Id.String()) }
- 									hx-swap="delete"
- 									hx-confirm="Do you really want to delete this template? This action will also delete all retros that are currently using it!!!"
- 									hx-trigger="click"
+									class="close-icon"
+									hx-delete={ fmt.Sprintf("/templates/%s", template.Id.String()) }
+									hx-target={ fmt.Sprintf("#template-%s", template.Id.String()) }
+									hx-swap="delete"
+									hx-confirm="Do you really want to delete this template? This action will also delete all retros that are currently using it!!!"
+									hx-trigger="click"
 								></div>
 								<div class="templates-list-item-content">
 									<p>{ template.Categories }</p>
 								</div>
 								<div
- 									class="templates-list-item-message"
- 									hx-target="body"
- 									hx-swap="outerHTML"
- 									hx-push-url="true"
- 									hx-vals={ getTemplateId(template) }
- 									hx-post="/retro/new"
- 									hx-trigger="click"
+									class="templates-list-item-message"
+									hx-target="body"
+									hx-swap="outerHTML"
+									hx-push-url="true"
+									hx-vals={ getTemplateId(template) }
+									hx-post="/retro/new"
+									hx-trigger="click"
 								>
 									<p><strong>Create retro from this template</strong></p>
 								</div>
@@ -115,6 +117,7 @@ templ CreateTemplateForm(err string) {
 						}
 						<button class="primary-button" onClick={ addInput() } type="button">Add category </button>
 						<button class="primary-button">Submit</button>
+						<img id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
 					</form>
 				</div>
 			</div>

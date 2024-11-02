@@ -1,7 +1,9 @@
 package views
 
-import "arcade/internal/models"
-import "fmt"
+import (
+	"arcade/internal/models"
+	"fmt"
+)
 
 func getCommentURL(id string) string {
 	return fmt.Sprintf("/record/%s/comments", id)
@@ -22,19 +24,23 @@ script resetForm() {
 
 templ UpdateRetroItemForm(content, retro_id, record_id string) {
 	<form
- 		hx-patch={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record_id) }
- 		hx-swap="outerHTML"
- 		hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
- 		class="retro-item-update"
+		hx-patch={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record_id) }
+		hx-swap="outerHTML"
+		hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
+		class="retro-item-update"
+		hx-indicator={ "#spinner-update-" + record_id }
 	>
 		<textarea required type="text" name="content">{ content }</textarea>
-		<button class="primary-button">Update</button>
 		<button
- 			type="button"
- 			class="secondary-button"
- 			hx-get={ fmt.Sprintf("/record/%s", record_id) }
- 			hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
+			class="primary-button"
+		>Update</button>
+		<button
+			type="button"
+			class="secondary-button"
+			hx-get={ fmt.Sprintf("/record/%s", record_id) }
+			hx-target={ fmt.Sprintf("#retro-item-%s", record_id) }
 		>Cancel</button>
+		<img id={ "spinner-update-" + record_id } class="htmx-indicator" src="/static/images/bars.svg"/>
 	</form>
 	@autoresize()
 }
@@ -43,23 +49,23 @@ templ RetroItemBottom(record models.Record) {
 	<div class="column-item-title" id={ fmt.Sprintf("record-bottom-%s", record.Id) }>
 		<p>{ record.Author }</p>
 		<div
- 			class="column-item-title-reactions"
- 			hx-trigger="load"
- 			hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
- 			hx-swap="afterbegin"
+			class="column-item-title-reactions"
+			hx-trigger="load"
+			hx-get={ fmt.Sprintf("/record/%s/likes/%d", record.Id.String(), record.Likes) }
+			hx-swap="afterbegin"
 		>
 			<div
- 				hx-get={ getCommentURL(record.Id.String()) }
- 				hx-swap="outerHTML"
- 				hx-trigger="click"
- 				hx-target={ fmt.Sprintf("#record-bottom-%s", record.Id) }
+				hx-get={ getCommentURL(record.Id.String()) }
+				hx-swap="outerHTML"
+				hx-trigger="click"
+				hx-target={ fmt.Sprintf("#record-bottom-%s", record.Id) }
 			>
 				<i class="fa fa-comment"></i>
 				<p
- 					hx-get={ getCommentCountURL(record.Id.String()) }
- 					hx-trigger="load"
- 					hx-swap="innerHTML"
- 					hx-target="this"
+					hx-get={ getCommentCountURL(record.Id.String()) }
+					hx-trigger="load"
+					hx-swap="innerHTML"
+					hx-target="this"
 				></p>
 			</div>
 		</div>
@@ -73,23 +79,26 @@ templ RetroItem(record models.Record, authorized bool, retro_id string) {
 			if authorized {
 				<div class="pizde-flex">
 					<button
- 						class="default-button"
- 						type="button"
- 						hx-get={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
- 						hx-trigger="click"
- 						hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
- 						hx-swap="innerhtml"
+						class="default-button"
+						type="button"
+						hx-get={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
+						hx-trigger="click"
+						hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
+						hx-swap="innerhtml"
+						hx-indicator={ "#spinner-change-" + record.Id.String() }
 					>
 						Edit
 					</button>
 					<button
- 						class="default-button"
- 						type="button"
- 						hx-trigger="click"
- 						hx-delete={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
- 						hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
- 						hx-swap="delete"
+						class="default-button"
+						type="button"
+						hx-trigger="click"
+						hx-delete={ fmt.Sprintf("/retro/%s/record/%s", retro_id, record.Id.String()) }
+						hx-target={ fmt.Sprintf("#retro-item-%s", record.Id.String()) }
+						hx-swap="delete"
+						hx-indicator={ "#spinner-change-" + record.Id.String() }
 					>Delete</button>
+					<img id={ "spinner-change-" + record.Id.String() } class="htmx-indicator" src="/static/images/bars.svg"/>
 				</div>
 			}
 		</div>
@@ -129,25 +138,27 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 					if authorized {
 						if retro.Visible {
 							<button
- 								class="primary-button"
- 								hx-vals={ setVisibility("true") }
- 								hx-post={ getVisibilityLink(retro.Id.String()) }
- 								hx-swap="outerHTML"
- 								hx-target="body"
+								class="primary-button"
+								hx-vals={ setVisibility("true") }
+								hx-post={ getVisibilityLink(retro.Id.String()) }
+								hx-swap="outerHTML"
+								hx-target="body"
 							>
 								<i class="fa fa-lock"></i> Make private
 							</button>
 						} else {
 							<button
- 								class="primary-button"
- 								hx-vals={ setVisibility("false") }
- 								hx-post={ getVisibilityLink(retro.Id.String()) }
- 								hx-swap="outerHTML"
- 								hx-target="body"
+								class="primary-button"
+								hx-vals={ setVisibility("false") }
+								hx-post={ getVisibilityLink(retro.Id.String()) }
+								hx-swap="outerHTML"
+								hx-target="body"
+								hx-indicator="#spinner-visible"
 							>
 								<i class="fa fa-unlock"></i> Make visible
 							</button>
 						}
+						<img id="spinner-visible" class="htmx-indicator" src="/static/images/bars.svg"/>
 					}
 					if !retro.Visible {
 						<div>
@@ -163,15 +174,17 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 							</div>
 							<div class="comments" id={ c_ids[category] }>
 								<form
- 									class="primary-form"
- 									hx-post=""
- 									hx-swap="beforeend"
- 									hx-target={ "#" + c_ids[category] }
- 									data-reset-on-load
+									class="primary-form"
+									hx-post=""
+									hx-swap="beforeend"
+									hx-target={ "#" + c_ids[category] }
+									hx-indicator={ "#post-spinner-" + c_ids[category] }
+									data-reset-on-load
 								>
 									<input required type="hidden" name="category" value={ category }/>
 									<textarea required placeholder="Type here to make a post" type="text" name="content"></textarea>
 									<button class="primary-button">Post</button>
+									<img id={ "post-spinner-" + c_ids[category] } class="htmx-indicator" src="/static/images/bars.svg"/>
 								</form>
 								for _, record := range records[category] {
 									@RetroItem(record, auth_table[record.Id.String()], retro.Id.String())

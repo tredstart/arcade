@@ -8,13 +8,18 @@ templ Login(err string) {
 		<div class="auth-layout" hx-boost="true">
 			<div class="auth-container">
 				<h5>Retro Board</h5>
-				<form class="primary-form" method="post">
+				<form
+					class="primary-form"
+					method="post"
+					hx-indicator="#spinner"
+				>
 					<input required class="primary-input" type="text" placeholder="Username" name="username"/>
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
 					if err != "" {
 						@errorBlock(err)
 					}
 					<button class="primary-button">Login</button>
+					<img id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
 					<a href="/register">Don't have an account? Create new!</a>
 				</form>
 			</div>
@@ -33,7 +38,11 @@ templ Register(err string) {
 					<input required class="primary-input" type="text" placeholder="Name" name="name"/>
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
 					<input required class="primary-input" type="password" placeholder="Confirm Password" name="confirm"/>
-					<button class="primary-button">Create account </button>
+					<button
+						class="primary-button"
+						hx-indicator="#spinner"
+					>Create account </button>
+					<img id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
 					<a href="/login">Aready have an account? Log in!</a>
 				</form>
 				if err != "" {
@@ -53,7 +62,14 @@ templ UpdateUser(user models.User, err string) {
 				<div class="default-container-title">
 					<h6>Wanna change your user data?</h6>
 				</div>
-				<form class="primary-form small" hx-put="/profile" hx-push-url="true" hx-target="body" hx-swap="outerHTML">
+				<form
+					class="primary-form small"
+					hx-put="/profile"
+					hx-push-url="true"
+					hx-target="body"
+					hx-swap="outerHTML"
+					hx-indicator="#spinner"
+				>
 					<input required class="primary-input" type="text" placeholder="Username" name="username" value={ user.Username }/>
 					<input required class="primary-input" type="text" placeholder="Name" name="name" value={ user.Name }/>
 					<input required class="primary-input" type="password" placeholder="Password" name="password"/>
@@ -62,6 +78,7 @@ templ UpdateUser(user models.User, err string) {
 						@errorBlock(err)
 					}
 					<button class="primary-button">Update account</button>
+					<img id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
 				</form>
 			</div>
 		</div>
@@ -76,7 +93,8 @@ templ LoginAsGuest() {
 				<h5>Retro Board</h5>
 				<form class="primary-form" method="post">
 					<input required class="primary-input" placeholder="Please provide your name" type="text" name="name"/>
-					<button class="primary-button">Login as guest</button>
+					<button class="primary-button" hx-indicator="#spinner">Login as guest</button>
+					<img id="spinner" class="htmx-indicator" src="/static/images/bars.svg"/>
 					<a href="/login">Aready have an account? Log in!</a>
 				</form>
 			</div>

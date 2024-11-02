@@ -1,7 +1,9 @@
 package views
 
-import "arcade/internal/models"
-import "fmt"
+import (
+	"arcade/internal/models"
+	"fmt"
+)
 
 templ CommentsBlock(comments []models.Comment, record_id string) {
 	<div id={ fmt.Sprintf("comments-list-%s", record_id) }>
@@ -9,22 +11,27 @@ templ CommentsBlock(comments []models.Comment, record_id string) {
 			<div class="column-item-reaction-comments">
 				<div class="column-item-reaction-comments-actions">
 					<div
- 						class="close-icon"
- 						hx-get={ fmt.Sprintf("/record/%s", record_id) }
- 						hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }
- 						hx-swap="outerHTML"
- 						hx-headers={ fmt.Sprint(`{"Load-Bottom": true}`) }
+						class="close-icon"
+						hx-get={ fmt.Sprintf("/record/%s", record_id) }
+						hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }
+						hx-swap="outerHTML"
+						hx-headers={ fmt.Sprint(`{"Load-Bottom": true}`) }
 					></div>
 				</div>
 				<form
- 					class="primary-form"
- 					hx-post={ getCommentURL(record_id) }
- 					hx-swap="beforeend"
- 					hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }
+					class="primary-form"
+					hx-post={ getCommentURL(record_id) }
+					hx-swap="beforeend"
+					hx-target={ fmt.Sprintf("#comments-list-%s", record_id) }
 				>
 					<p><strong>Leave a comment:</strong></p>
 					<textarea required placeholder="Your comment here" name="content"></textarea>
 					<button class="secondary-button">Comment</button>
+					<img
+						id={ "spinner-comment-" + record_id }
+						class="htmx-indicator"
+						src="/static/images/bars.svg"
+					/>
 				</form>
 				<p><strong>Comments:</strong></p>
 				for _, comment := range comments {
@@ -41,10 +48,10 @@ templ CommentsBlock(comments []models.Comment, record_id string) {
 
 templ Comment(comment models.Comment) {
 	<div
- 		class="column-item-reaction-comments-list-item"
- 		hx-get={ fmt.Sprintf("/comments/%s/%d", comment.Id.String(), comment.Likes) }
- 		hx-swap="beforeend"
- 		hx-trigger="load"
+		class="column-item-reaction-comments-list-item"
+		hx-get={ fmt.Sprintf("/comments/%s/%d", comment.Id.String(), comment.Likes) }
+		hx-swap="beforeend"
+		hx-trigger="load"
 	>
 		<div class="content">
 			<p><strong>{ comment.Author }</strong> commented:</p>
