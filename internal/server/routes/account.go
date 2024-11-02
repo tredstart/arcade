@@ -149,6 +149,6 @@ func History(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 	retros, _ := models.FetchRetrosByUser(user.Value)
-	retros = utils.Reverse[models.Retro](retros)
+	retros = utils.Reverse(retros)
 	return views.HistoryPage(retros).Render(c.Request().Context(), c.Response().Writer)
 }

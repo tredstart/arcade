@@ -1,7 +1,9 @@
 package views
 
-import "arcade/internal/models"
-import "fmt"
+import (
+	"arcade/internal/models"
+	"fmt"
+)
 
 templ HistoryPage(retros []models.Retro) {
 	@head("Retrospectives")
@@ -39,4 +41,72 @@ templ HistoryPage(retros []models.Retro) {
 			</div>
 		</div>
 	</body>
+}
+
+templ SavedPage(saves []models.Saved) {
+	@head("Saved")
+	<body>
+		<div class="default-layout">
+			@aside()
+			<div class="default-container">
+				<div class="default-container-title">
+					<h5>Saved</h5>
+				</div>
+				if len(saves) != 0 {
+					<div class="history-list">
+						for _, save := range saves {
+							<li id={ fmt.Sprintf("saved-%s", save.Id) } class="history-list-item">
+								<div
+									class="close-icon"
+									hx-delete={ fmt.Sprintf("/saved/%s", save.Id) }
+									hx-target={ fmt.Sprintf("#saved-%s", save.Id) }
+									hx-swap="delete"
+									hx-confirm="Do you really want to delete this save?"
+								></div>
+								<a href={ templ.URL("/retro/" + save.Retro) }>
+									<h6>
+										{ save.Created }
+									</h6>
+								</a>
+							</li>
+						}
+					</div>
+				} else {
+					<div class="default-container-content">
+						<a href="/retros">You don't have any saved retros.</a>
+					</div>
+				}
+			</div>
+		</div>
+	</body>
+}
+
+templ SaveButton(retro, id string) {
+	<div id="save-button">
+		if id == "" {
+			<button
+				type="button"
+				class="primary-button"
+				hx-post="/saved"
+				hx-swap="outerHTML"
+				hx-indicator="#spinner-save-button"
+				hx-vals={ fmt.Sprintf(`{"retro_id": "%s"}`, retro) }
+				hx-target="#save-button"
+			>Save</button>
+		} else {
+			<button
+				type="button"
+				class="secondary-button"
+				hx-delete={ fmt.Sprintf("/button-delete/%s/%s", retro, id) }
+				hx-swap="outerHTML"
+				hx-indicator="#spinner-save-button"
+				hx-target="#save-button"
+			>Unsave</button>
+		}
+		<img
+			id="spinner-save-button"
+			class="htmx-indicator"
+			src="/static/images/bars.svg"
+		/>
+	</div>
 }

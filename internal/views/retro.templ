@@ -159,6 +159,7 @@ templ RetroPage(records map[string][]models.Record, c_ids map[string]string, ret
 							</button>
 						}
 						<img id="spinner-visible" class="htmx-indicator" src="/static/images/bars.svg"/>
+						<div hx-get={ "/verify-save/" + retro.Id.String() } hx-trigger="load" hx-swap="outerHTML"></div>
 					}
 					if !retro.Visible {
 						<div>

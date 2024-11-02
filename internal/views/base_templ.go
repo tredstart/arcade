@@ -99,7 +99,7 @@ func aside() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<aside class=\"sidebar\"><div class=\"sidebar-title\"><img src=\"/static/images/buga-vuga-logo.png\" alt=\"Arcade\"></div><div class=\"sidebar-content\"><ul class=\"sidebar-content-menu\"><li><a class=\"navigation-link\" href=\"/templates\">Templates</a></li><li><a class=\"navigation-link\" href=\"/retros\">Retrospectives</a></li><li><a class=\"navigation-link\" href=\"/profile\">Account</a></li><li>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<aside class=\"sidebar\"><div class=\"sidebar-title\"><img src=\"/static/images/buga-vuga-logo.png\" alt=\"Arcade\"></div><div class=\"sidebar-content\"><ul class=\"sidebar-content-menu\"><li><a class=\"navigation-link\" href=\"/templates\">Templates</a></li><li><a class=\"navigation-link\" href=\"/retros\">Retrospectives</a></li><li><a class=\"navigation-link\" href=\"/saved\">Saved</a></li><li><a class=\"navigation-link\" href=\"/profile\">Account</a></li><li>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
