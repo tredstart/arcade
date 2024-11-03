@@ -10,6 +10,7 @@ build:
 
 # Run the application
 run:
+	@echo "Running..."
 	@go run cmd/api/main.go
 
 # Test the application
